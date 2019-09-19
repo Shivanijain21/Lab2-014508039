@@ -57,7 +57,7 @@ class Calculator extends Component {
     return (
       <div class="container">
         <form>
-          <div className="row justify-content-md-center">
+          <div className="row justify-content-sm-center">
             <div className="col-4">
               <div className="row display py-2">
                 <input
