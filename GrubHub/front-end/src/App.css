@@ -1,28 +1,40 @@
-.App {
-  text-align: center;
+html {
+  height: 100%;
+}
+html,
+body,
+.container-fluid {
+  background-color: #dcdcdc;
+  padding: 0;
+  height: 100%;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.signUp,
+.signIn {
+  background-color: white;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.active {
+  border-bottom: 1px solid black;
 }
-
-.App-link {
-  color: #61dafb;
+.signIn {
+  padding-bottom: 20px;
 }
+.image-container {
+  width: 100%;
+  height: 100%;
+}
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+  right: 0;
+  left: unset;
+}
+/* .image-container > .burger-image {
+  width: 100%;
+  height: 100%;
+} */
 
+.linkinNav {
+  color: rgba(0, 0, 0, 0.5);
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
