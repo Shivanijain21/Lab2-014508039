@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import SignUp from "./component/signUp";
 import Login from "./component/login";
-import Home from "./component/home";
+import Home from "./component/home/home";
 import Landing from "./component/landing";
 import Profile from "./component/profile/profile";
 import store from "./store";
 import { Provider } from "react-redux";
-import RestuarantCards from "./component/RestuarantCards";
 import Restuarant from "./component/restuarant";
+import SearchResult from "./component/searchResult";
+import Menu from "./component/menu";
 
 class Main extends Component {
   state = {};
@@ -21,8 +22,9 @@ class Main extends Component {
           <Route path="/home" component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
-          <Route path="/restuarantCards" component={RestuarantCards} />
-          <Route path="/restuarant" component={Restuarant} />
+          <Route path="/restuarant/:id" component={Restuarant} />
+          <Route path="/searchResult/:searchString" component={SearchResult} />
+          <Route path="/menu" component={Menu} />
         </div>
       </Provider>
     );

@@ -28,7 +28,8 @@ class OwnerProfile extends Component {
     let owner = Object.assign({}, profile);
     this.setState({ owner });
   }
-  handleUpdate = () => {
+  handleUpdate = e => {
+    e.preventDefault();
     console.log("inside handle update");
     const user = this.state.owner;
     let data = Object.assign({}, user);

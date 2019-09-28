@@ -1,4 +1,4 @@
-import { FETCH_CRED } from "../actions/types";
+import { FETCH_CRED, LOGOUT } from "../actions/types";
 
 const initialState = {
   auth: Number
@@ -7,6 +7,13 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case FETCH_CRED:
       console.log("In login");
+      console.log(action.payload);
+      return {
+        ...state,
+        auth: action.payload
+      };
+    case LOGOUT:
+      console.log("In lougout");
       console.log(action.payload);
       return {
         ...state,

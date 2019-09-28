@@ -96,9 +96,10 @@ class BuyerProfile extends Component {
             <button type="submit" className="col-sm-12 btn btn-primary">
               Update
             </button>
-            <button className="col-sm-12 btn btn-primary">
-              <Link to="/home">cancel</Link>
-            </button>
+
+            <Link className="col-sm-12 btn btn-primary" to="/home">
+              cancel
+            </Link>
           </div>
         </form>
       </div>

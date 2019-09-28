@@ -5,13 +5,17 @@ import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import { fetchcred } from "../actions/loginAction";
 import PropTypes from "prop-types";
-import { Spinner } from "react-bootstrap";
 
 class Login extends Component {
   state = {
     username: "",
-    password: ""
+    password: "",
+    authFlag: ""
   };
+  componentWillReceiveProps({ login }) {
+    console.log(login);
+    this.setState({ authFlag: login });
+  }
   handleChange = e => {
     const user = this.state;
     user[e.currentTarget.name] = e.currentTarget.value;
@@ -28,7 +32,8 @@ class Login extends Component {
     this.props.fetchcred(data);
   };
   render() {
-    const login = this.props.login;
+    const login = this.state.authFlag;
+    console.log("state");
     console.log(login);
     let redirectVar = null;
     let errorMessage = null;

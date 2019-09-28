@@ -1,4 +1,4 @@
-import { FETCH_CRED } from "./types";
+import { FETCH_CRED, LOGOUT } from "./types";
 import axios from "axios";
 // import cookie from "react-cookies";
 
@@ -20,4 +20,12 @@ export const fetchcred = data => dispatch => {
         payload: error
       })
     );
+};
+
+export const logout = () => dispatch => {
+  let auth = "";
+  dispatch({
+    type: LOGOUT,
+    payload: auth
+  });
 };

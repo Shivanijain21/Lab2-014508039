@@ -4,7 +4,7 @@ html {
 html,
 body,
 .container-fluid {
-  background-color: #dcdcdc;
+  background-color: #e3e3e3;
   padding: 0;
   height: 100%;
 }
@@ -13,24 +13,26 @@ body,
 .signIn {
   background-color: white;
 }
-.active {
-  border-bottom: 1px solid black;
-}
 .signIn {
   padding-bottom: 20px;
 }
+
+/* Menu */
+.active {
+  border-bottom: 1px solid black;
+}
+
+/* profile */
 .image-container {
   width: 100%;
   height: 100%;
 }
+
+/* nav bar */
 .navbar-expand-lg .navbar-nav .dropdown-menu {
   right: 0;
   left: unset;
 }
-/* .image-container > .burger-image {
-  width: 100%;
-  height: 100%;
-} */
 
 .linkinNav {
   color: rgba(0, 0, 0, 0.5);
@@ -42,4 +44,9 @@ body,
   to {
     transform: rotate(360deg);
   }
+}
+
+.Home {
+  background-image: url("./Images/pizza.jpg");
+  background-size: cover;
 }

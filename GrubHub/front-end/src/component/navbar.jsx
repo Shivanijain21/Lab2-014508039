@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import logo from "../Images/grubhub-icon.png";
 import { Link } from "react-router-dom";
 import cookie from "react-cookies";
-import { Navbar, Nav, NavItem, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { connect } from "react-redux";
+import { logout } from "../actions/loginAction";
+import PropTypes from "prop-types";
 
 //create the Navbar Component
 class CustomNav extends Component {
@@ -14,12 +17,13 @@ class CustomNav extends Component {
     } else if (cookie.load("Owner")) {
       cookie.remove("Owner", { path: "/" });
     }
+    this.props.logout();
   };
 
   render() {
     let homelink = null;
     let customLink = null;
-    let user = `Hi ${localStorage.name}`;
+    let user = `Hi`;
     //commonNav loop
     if (cookie.load("Owner") || cookie.load("Buyer")) {
       console.log("Able to read cookie");
@@ -83,5 +87,16 @@ class CustomNav extends Component {
     );
   }
 }
+CustomNav.propTypes = {
+  logout: PropTypes.func.isRequired,
+  login: PropTypes.array.isRequired
+};
 
-export default CustomNav;
+const mapStateToProps = state => ({
+  login: state.login.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { logout }
+)(CustomNav);

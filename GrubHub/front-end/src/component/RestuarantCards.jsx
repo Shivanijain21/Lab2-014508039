@@ -1,9 +1,16 @@
 import React, { Component } from "react";
-import Redirect from "react";
 import { Link } from "react-router-dom";
 
 class RestuarantCards extends Component {
-  state = {};
+  state = {
+    rest_id: "",
+    restuarant_name: "",
+    restuarant_dp: ""
+  };
+  componentWillMount() {
+    const restuarant = Object.assign({}, this.props.restuarant);
+    this.setState({ ...restuarant });
+  }
 
   render() {
     const imageStyle = {
@@ -11,26 +18,21 @@ class RestuarantCards extends Component {
       height: "100px",
       backgroundColor: "grey"
     };
+    const restuarantPageUrl = "/restuarant/" + this.state.rest_id;
     return (
-      <div>
-        <div class="row justify-content-sm-center">
-          <Link to="/restuarant">
-            <div className="card">
-              <img
-                className="card-img-top mt-3"
-                style={imageStyle}
-                alt="..."
-              ></img>
-              <div className="card-body">
-                <h5 className="card-title">Restuarant Title</h5>
-                <p className="card-text">Deliver Time</p>
-                <a href="#" className="btn btn-link">
-                  Explore
-                </a>
-              </div>
+      <div class="row">
+        <Link to={restuarantPageUrl} className="col-sm-12">
+          <div className="card">
+            <img className="card-img-top" style={imageStyle} alt="..."></img>
+            <div className="card-body">
+              <h5 className="card-title">{this.state.restuarant_name}</h5>
+              <p className="card-text">Deliver Time</p>
+              <a href="#" className="btn btn-link">
+                Explore
+              </a>
             </div>
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     );
   }

@@ -59,8 +59,12 @@ class SignUp extends Component {
     }
     this.props.createProfile(data);
   };
+  componentWillReceiveProps({ register }) {
+    console.log(register);
+    this.setState({ authFlag: register });
+  }
   render() {
-    const register = this.props.register;
+    const register = this.state.authFlag;
     let user = this.state;
     var restuarantInfo = null;
     let redirectVar = null;
