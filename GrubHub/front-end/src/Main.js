@@ -9,7 +9,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import Restuarant from "./component/restuarant";
 import SearchResult from "./component/searchResult";
-import Menu from "./component/menu";
+import Menu from "./component/owner/ownermenu";
 
 class Main extends Component {
   state = {};

@@ -32,7 +32,11 @@ class CustomNav extends Component {
         customLink = "Cart";
       } else {
         homelink = "/home";
-        customLink = "Menu";
+        customLink = (
+          <Link to="/menu" className="linkinNav nav-link">
+            Menu
+          </Link>
+        );
       }
     }
 
@@ -56,7 +60,7 @@ class CustomNav extends Component {
             className="justify-content-end"
           >
             <Nav>
-              <Nav.Link>{customLink}</Nav.Link>
+              {customLink}
               <NavDropdown title={user} id="collasible-nav-dropdown">
                 <NavDropdown.Item>Past Order</NavDropdown.Item>
                 <NavDropdown.Item>Upcoming Order</NavDropdown.Item>

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import RestuarantCards from "./RestuarantCards";
+import cookie from "react-cookies";
+import { Redirect } from "react-router";
 
 class SearchResult extends Component {
   state = {
@@ -38,6 +40,10 @@ class SearchResult extends Component {
     this.setState(user);
   };
   render() {
+    let redirectVar = null;
+    if (!cookie.load("Buyer")) {
+      redirectVar = <Redirect to="/login" />;
+    }
     let restuarantList = null;
     if (this.state.dataSet.length === 0) {
       restuarantList = (
@@ -50,7 +56,7 @@ class SearchResult extends Component {
         <div class="card-deck col-sm-9">
           {this.state.dataSet.map(data => (
             <div class="col-sm-12">
-              <RestuarantCards restuarant={data} />
+              <RestuarantCards key={data.rest_id} restuarant={data} />
             </div>
           ))}
         </div>
@@ -59,6 +65,7 @@ class SearchResult extends Component {
     // console.log(this.state.dataSet);
     return (
       <div class="container-fluid">
+        {redirectVar}
         <div class="row">
           <div className="col-sm-3">
             <h2>Filter using cuisine</h2>

@@ -5,7 +5,7 @@ import Navbar from "../navbar";
 import BuyerProfile from "./buyerProfile";
 import OwnerProfile from "./ownerProfile";
 import ImageUploader from "../imageUploader";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 
 const Profile = () => {
   let profileComponent = null;
@@ -14,7 +14,7 @@ const Profile = () => {
     if (cookie.load("Buyer")) profileComponent = <BuyerProfile />;
     else profileComponent = <OwnerProfile />;
   } else {
-    redirectVar = <Redirect to="/" />;
+    redirectVar = <Redirect to="/login" />;
   }
   return (
     <div className="container-fluid">
