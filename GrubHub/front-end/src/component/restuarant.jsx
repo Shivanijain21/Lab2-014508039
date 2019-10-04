@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, animateScroll as scroll } from "react-scroll";
+import { Link as Alink } from "react-router-dom";
 import Menu from "./menu";
 import Axios from "axios";
+import CustomNavbar from "./navbar";
 
 class Restuarant extends Component {
   state = {
@@ -39,6 +41,7 @@ class Restuarant extends Component {
     };
     return (
       <div class="container-fluid">
+        <CustomNavbar />
         <div className="row">
           <img
             className="col-sm-12 rest-img-top mt-3"
@@ -55,7 +58,12 @@ class Restuarant extends Component {
         <div className="col-sm-12">
           <p>Cuisine : {this.state.restuarant.cuisine}</p>
         </div>
-        <Navbar sticky="top" bg="light" variant="light">
+        <Navbar
+          sticky="top"
+          bg="light"
+          variant="light"
+          className="d-flex justify-content-between"
+        >
           <Nav sticky="top">
             <Nav.Item>
               <Link
@@ -101,18 +109,24 @@ class Restuarant extends Component {
             </Nav.Item>
           </Nav>
         </Navbar>
-        <div id="menu">
-          <h2>Menu</h2>
-          <Menu />
-          <div></div>
-        </div>
-        <div id="about">
-          <h2>about</h2>
-          <div>About Content</div>
-        </div>
-        <div id="review">
-          <h2>review</h2>
-          <div>Review Content</div>
+        <button>
+          <Alink to="/cart" className="btn btn-primary">
+            View cart
+          </Alink>
+        </button>
+        <div className="container">
+          <div id="menu">
+            <h2>Menu</h2>
+            <Menu value={this.state.restuarant.rest_id} />
+          </div>
+          <div id="about">
+            <h2>about</h2>
+            <div>About Content</div>
+          </div>
+          <div id="review">
+            <h2>review</h2>
+            <div>Review Content</div>
+          </div>
         </div>
       </div>
     );

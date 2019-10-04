@@ -10,6 +10,8 @@ import { Provider } from "react-redux";
 import Restuarant from "./component/restuarant";
 import SearchResult from "./component/searchResult";
 import Menu from "./component/owner/ownermenu";
+import ItemList from "./component/owner/itemList";
+import Cart from "./component/cart";
 
 class Main extends Component {
   state = {};
@@ -24,7 +26,9 @@ class Main extends Component {
           <Route path="/signup" component={SignUp} />
           <Route path="/restuarant/:id" component={Restuarant} />
           <Route path="/searchResult/:searchString" component={SearchResult} />
-          <Route path="/menu" component={Menu} />
+          <Route path="/itemList/:section" component={ItemList} />
+          <Route path="/restuarantMenu" component={Menu} />
+          <Route path="/cart" component={Cart} />
         </div>
       </Provider>
     );

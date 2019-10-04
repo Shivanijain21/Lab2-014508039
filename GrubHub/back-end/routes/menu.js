@@ -11,15 +11,38 @@ const pool = mysql.createPool({
 
 router.post("/", (req, res) => {
   data = req.body;
-  fetchQuery = `SELECT * from Item where rest_id='${data.id}'`;
+  fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}'`;
   pool.query(fetchQuery, (err, result) => {
     if (!err) {
-      console.log("Inside add an item");
+      console.log("fetch item");
       res.writeHead(200, {
         "Content-Type": "application/JSON"
       });
-      res.end(JSON.stringify(result[0]));
-    }
+      res.end(JSON.stringify(result));
+    } else console.log(err);
+  });
+});
+router.get("/:id", (req, res) => {
+  id = req.params.id;
+  fetchQuery = `SELECT * from Item where restId='${id}'`;
+  pool.query(fetchQuery, (err, result) => {
+    if (!err) {
+      console.log("fetch item");
+      let sections = {};
+      result.forEach(function(e) {
+        if (sections.hasOwnProperty(e.section)) {
+          sections[e.section].push(e);
+        } else {
+          sections[e.section] = [];
+          sections[e.section].push(e);
+        }
+      });
+      console.log(sections);
+      res.writeHead(200, {
+        "Content-Type": "application/JSON"
+      });
+      res.end(JSON.stringify(sections));
+    } else console.log(err);
   });
 });
 
@@ -28,7 +51,7 @@ router.get("/section/:id", (req, res) => {
   fetchQuery = `SELECT * from Section where restId='${id}'`;
   pool.query(fetchQuery, (err, result) => {
     if (!err) {
-      console.log("Inside add an item");
+      console.log("Inside fetch section");
       res.writeHead(200, {
         "Content-Type": "application/JSON"
       });
@@ -114,28 +137,93 @@ router.post("/deleteSection", (req, res) => {
 
 router.post("/addItem", (req, res) => {
   data = req.body;
-  insertquery = `INSERT INTO Item (rest_id,price,category,item_name,description) VALUES ('${data.rest_id}','${data.price}','${data.category}','${data.item_name}','${data.description}');`;
+  insertquery = `INSERT INTO Item (restId,price,section,item_name,description) VALUES ('${data.restId}','${data.price}','${data.sectionName}','${data.itemName}','${data.description}');`;
   pool.query(insertquery, (err, result) => {
     if (!err) {
       console.log("Inside add an item");
-      res.writeHead(200, {
+      fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}';`;
+      pool.query(fetchQuery, (err, result) => {
+        if (!err) {
+          console.log("Inside fetch an item");
+          res.writeHead(200, {
+            "Content-Type": "application/JSON"
+          });
+          res.end(JSON.stringify(result));
+        } else {
+          res.writeHead(500, {
+            "Content-Type": "plain/text"
+          });
+          res.end("500");
+        }
+      });
+    } else {
+      console.log(err);
+      res.writeHead(500, {
         "Content-Type": "plain/text"
       });
-      res.end("200");
+      res.end("500");
     }
   });
 });
 
 router.post("/editItem", (req, res) => {
   data = req.body;
-  insertquery = `UPDATE Item SET price ='${data.price}',category='${data.category}',restuarant_name='${data.item_name}',description='${data.description}',);`;
-  pool.query(insertquery, (err, result) => {
+  updatequery = `UPDATE Item SET price ='${data.price}',section='${data.sectionName}',item_name='${data.itemName}',description='${data.description}' where item_id = "${data.itemId}";`;
+  pool.query(updatequery, (err, result) => {
     if (!err) {
-      console.log("Inside edit an item");
-      res.writeHead(200, {
+      fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}';`;
+      pool.query(fetchQuery, (err, result) => {
+        if (!err) {
+          res.writeHead(200, {
+            "Content-Type": "application/JSON"
+          });
+          res.end(JSON.stringify(result));
+        } else {
+          console.log(err);
+          res.writeHead(500, {
+            "Content-Type": "plain/text"
+          });
+          res.end("500");
+        }
+      });
+    } else {
+      console.log(err);
+      res.writeHead(500, {
         "Content-Type": "plain/text"
       });
-      res.end("200");
+      res.end("500");
+    }
+  });
+});
+
+router.post("/deleteItem", (req, res) => {
+  data = req.body;
+  deletequery = `delete from Item where item_id="${data.itemId}" and restId="${data.restId}";`;
+  pool.query(deletequery, (err, result) => {
+    if (!err) {
+      console.log("Inside delete an item");
+      fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}'`;
+      pool.query(fetchQuery, (err, result) => {
+        if (!err) {
+          console.log("fetch item");
+          res.writeHead(200, {
+            "Content-Type": "application/JSON"
+          });
+          res.end(JSON.stringify(result));
+        } else {
+          console.log(err);
+          res.writeHead(500, {
+            "Content-Type": "application/JSON"
+          });
+          res.end("500");
+        }
+      });
+    } else {
+      console.log(err);
+      res.writeHead(500, {
+        "Content-Type": "application/JSON"
+      });
+      res.end("500");
     }
   });
 });

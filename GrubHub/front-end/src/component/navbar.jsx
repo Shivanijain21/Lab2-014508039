@@ -12,6 +12,7 @@ class CustomNav extends Component {
   //handle logout to destroy the cookie
   handleLogout = () => {
     localStorage.name = "";
+    sessionStorage.clear();
     if (cookie.load("Buyer")) {
       cookie.remove("Buyer", { path: "/" });
     } else if (cookie.load("Owner")) {
@@ -33,7 +34,7 @@ class CustomNav extends Component {
       } else {
         homelink = "/home";
         customLink = (
-          <Link to="/menu" className="linkinNav nav-link">
+          <Link to="/restuarantMenu" className="linkinNav nav-link">
             Menu
           </Link>
         );

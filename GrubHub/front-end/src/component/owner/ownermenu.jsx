@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import cookie from "react-cookies";
+import { Redirect } from "react-router";
+import Navbar from "../navbar";
 
 class OwnerMenu extends Component {
   state = {
@@ -17,7 +19,6 @@ class OwnerMenu extends Component {
     // console.log(restId);
     Axios.get("http://localhost:3001/menu/section/" + restId).then(response => {
       console.log(response.data);
-
       this.setState({ section: response.data, restId: restId });
     });
   }
@@ -27,14 +28,29 @@ class OwnerMenu extends Component {
       restId: this.state.restId,
       sectionName: this.state.addsection.sectionName,
       description: this.state.addsection.description,
-      errorMessage: ""
+      errorMessage: "",
+      url: ""
     };
     // console.log(data);
 
     Axios.post("http://localhost:3001/menu/addSection", data).then(response => {
       console.log(response.data);
       if (response.data === 200) {
-        this.setState({ showAddSection: false, errorMessage: 200 });
+        Axios.get("http://localhost:3001/menu/section/" + data.restId).then(
+          response => {
+            console.log(response.data);
+            let addsection = {
+              sectionName: "",
+              description: ""
+            };
+            this.setState({
+              section: response.data,
+              showAddSection: false,
+              errorMessage: 200,
+              addsection: addsection
+            });
+          }
+        );
       }
       if (response.data === 400) {
         this.setState({ errorMessage: 400 });
@@ -60,21 +76,39 @@ class OwnerMenu extends Component {
       response => {
         console.log(response.data);
         if (response.data === 200) {
-          this.setState({ errorMessage: 200 });
+          Axios.get("http://localhost:3001/menu/section/" + data.restId).then(
+            response => {
+              console.log(response.data);
+              this.setState({
+                section: response.data,
+                showAddSection: false,
+                errorMessage: 200
+              });
+            }
+          );
         } else this.setState({ errorMessage: 500 });
       }
     );
   };
-
+  redirectToItem = e => {
+    const url = "/itemList/" + e.currentTarget.name;
+    this.setState({ url: url });
+  };
   render() {
     let errorBlock,
-      sectionCard = null;
+      sectionCard,
+      redirectToItemlist = null;
+    if (this.state.url) {
+      redirectToItemlist = <Redirect to={this.state.url} />;
+    }
     let displayCard = (
-      <div className="card-body">
-        <button className="btn btn-primary" onClick={this.showAddSection}>
-          +
+      <div className="card-body row justify-content-center">
+        <button
+          className="btn btn-primary col-sm-12"
+          onClick={this.showAddSection}
+        >
+          + add section
         </button>
-        <p>add section</p>
       </div>
     );
     if (this.state.showAddSection) {
@@ -91,6 +125,8 @@ class OwnerMenu extends Component {
                 onChange={this.handleChange}
                 required
               />
+            </div>
+            <div className="form-group">
               <label htmlFor="description">Description</label>
               <input
                 type="text"
@@ -99,10 +135,10 @@ class OwnerMenu extends Component {
                 onChange={this.handleChange}
                 required
               />
-              <button className="btn btn-danger" type="submit">
-                +
-              </button>
             </div>
+            <button className="btn btn-danger" type="submit">
+              +
+            </button>
           </form>
         </div>
       );
@@ -111,7 +147,7 @@ class OwnerMenu extends Component {
       errorBlock = <div className="alert alert-danger">already exist</div>;
     } else if (this.state.errorMessage === 500) {
       errorBlock = (
-        <div className="alert alert-danger">something went wrong</div>
+        <div className="alert alert-danger">Something went wrong</div>
       );
     }
     if (this.state.section.length === 0) {
@@ -125,24 +161,37 @@ class OwnerMenu extends Component {
     } else {
       sectionCard = this.state.section.map(data => (
         <div class="card col-sm-3">
-          <div className="card-body">
-            <button
-              type="button"
-              onClick={this.handleDelete}
-              name={data.section_name}
-            >
-              delete
-            </button>
-            <p>{data.section_name}</p>
+          <div className="card-body m-1">
+            <h2 className="text-center">{data.section_name}</h2>
+            <div className="row justify-content-sm-center">
+              <button
+                type="button"
+                onClick={this.handleDelete}
+                name={data.section_name}
+                className="btn btn-danger"
+              >
+                delete
+              </button>
+              <button
+                className="btn btn-secondary"
+                name={data.section_name}
+                onClick={this.redirectToItem}
+                className="btn btn-primary ml-2"
+              >
+                View
+              </button>
+            </div>
           </div>
         </div>
       ));
     }
     return (
       <div className="Container-fluid">
+        {redirectToItemlist}
         {errorBlock}
-        <div className="row">
-          <div className="col-sm-12 card-deck">
+        <Navbar />
+        <div className="container mt-5">
+          <div className="row">
             <div className="card col-sm-3">{displayCard}</div>
             {sectionCard}
           </div>

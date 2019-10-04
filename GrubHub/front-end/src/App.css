@@ -34,6 +34,11 @@ body,
   left: unset;
 }
 
+/* Itemlist */
+.item {
+  background: white;
+}
+
 .linkinNav {
   color: rgba(0, 0, 0, 0.5);
 }

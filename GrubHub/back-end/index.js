@@ -12,6 +12,7 @@ const owner = require("./routes/owner");
 const menu = require("./routes/menu");
 const profileImage = require("./routes/profileImage");
 const search = require("./routes/search");
+const order = require("./routes/order");
 
 const pool = mysql.createPool({
   host: "localhost",
@@ -53,6 +54,7 @@ app.use("/owner", owner);
 app.use("/menu", menu);
 app.use("/profileImage", profileImage);
 app.use("/search", search);
+app.use("/order", order);
 
 app.listen(3001, () => {
   console.log("Server listening on port 3001");
