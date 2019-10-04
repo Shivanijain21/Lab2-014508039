@@ -97,7 +97,11 @@ class OwnerMenu extends Component {
   render() {
     let errorBlock,
       sectionCard,
+      redirectVar,
       redirectToItemlist = null;
+    if (cookie.load("Owner")) {
+      redirectVar = <Redirect to="/login" />;
+    }
     if (this.state.url) {
       redirectToItemlist = <Redirect to={this.state.url} />;
     }
@@ -187,6 +191,7 @@ class OwnerMenu extends Component {
     }
     return (
       <div className="Container-fluid">
+        {redirectVar}
         {redirectToItemlist}
         {errorBlock}
         <Navbar />

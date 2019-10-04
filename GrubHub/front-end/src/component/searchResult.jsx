@@ -3,6 +3,7 @@ import Axios from "axios";
 import RestuarantCards from "./RestuarantCards";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import Navbar from "./navbar";
 
 class SearchResult extends Component {
   state = {
@@ -66,7 +67,8 @@ class SearchResult extends Component {
     return (
       <div class="container-fluid">
         {redirectVar}
-        <div class="row">
+        <Navbar />
+        <div class="row mt-5">
           <div className="col-sm-3">
             <h2>Filter using cuisine</h2>
             <div className="radio">

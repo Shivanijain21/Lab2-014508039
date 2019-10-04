@@ -20,7 +20,7 @@ class RestuarantCards extends Component {
     };
     const restuarantPageUrl = "/restuarant/" + this.state.rest_id;
     return (
-      <div class="row">
+      <div class="row my-3">
         <Link to={restuarantPageUrl} className="col-sm-12">
           <div className="card">
             <img className="card-img-top" style={imageStyle} alt="..."></img>
