@@ -1,12 +1,13 @@
 import { CREATE_PROFILE } from "./types";
 import axios from "axios";
+import util from "../utils";
 
 export const createProfile = data => dispatch => {
   console.log("in action: register new user");
   //set the with credentials to true
   axios.defaults.withCredentials = true;
   axios
-    .post("http://localhost:3001/signup", data)
+    .post(`${util.base_url}/signup`, data)
     .then(response => response.data)
     .then(register =>
       dispatch({

@@ -3,6 +3,7 @@ import Navbar from "./navbar";
 import Axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
+import util from "../utils";
 
 class Cart extends Component {
   state = {
@@ -43,7 +44,7 @@ class Cart extends Component {
       buyerId: cookie.load("Buyer")
     };
     console.log(data);
-    Axios.post("http://localhost:3001/order/placeOrder", data)
+    Axios.post(`${util.base_url}/order/placeOrder`, data)
       .then(response => this.setState({ orderPlaced: 200 }))
       .catch(err => this.setState({ orderPlaced: 500 }));
   };

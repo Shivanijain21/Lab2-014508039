@@ -7,6 +7,7 @@ import Axios from "axios";
 import CustomNavbar from "./navbar";
 import { Redirect } from "react-router";
 import cookie from "react-cookies";
+import util from "../utils";
 
 class Restuarant extends Component {
   state = {
@@ -22,7 +23,7 @@ class Restuarant extends Component {
   componentWillMount() {
     let rest_id = this.props.match.params.id;
     let restuarant = { ...this.state.restuarant };
-    Axios.get("http://localhost:3001/owner/profile/" + rest_id)
+    Axios.get(`${util.base_url}/owner/profile/${rest_id}`)
       .then(response => {
         console.log("In profile");
         restuarant.rest_id = rest_id;

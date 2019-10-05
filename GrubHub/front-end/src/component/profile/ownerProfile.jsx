@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { Image } from "react-bootstrap";
 import cookie from "react-cookies";
 import Axios from "axios";
+import util from "../../utils";
 
 class OwnerProfile extends Component {
   state = {
@@ -31,7 +32,7 @@ class OwnerProfile extends Component {
     console.log("in recieve prop");
     console.log(profile);
     let owner = Object.assign({}, profile);
-    let image = "http://localhost:3001/profileImage/Rest" + owner.rest_id;
+    let image = `${util.base_url}/profileImage/Rest${owner.rest_id}`;
     this.setState({ owner: owner, image: image });
   }
   handleUpdate = e => {
@@ -59,7 +60,7 @@ class OwnerProfile extends Component {
     let param;
     param = "Rest" + cookie.load("Owner");
     Axios.post(
-      "http://localhost:3001/profileImage/upload/" + param,
+      `${util.base_url}/profileImage/upload/${param}`,
       formData,
       config
     ).then(response => {

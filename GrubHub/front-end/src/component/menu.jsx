@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Accordion, Card } from "react-bootstrap";
 import Axios from "axios";
+import util from "../utils";
+
 class Menu extends Component {
   state = {
     restId: "",
@@ -15,7 +17,7 @@ class Menu extends Component {
     }
   }
   componentWillReceiveProps(props) {
-    Axios.get("http://localhost:3001/menu/" + props.value).then(response => {
+    Axios.get(`${util.base_url}/menu/${props.value}`).then(response => {
       let items = [];
       items = response.data;
       this.setState({ items: items });

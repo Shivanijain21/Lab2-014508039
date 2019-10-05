@@ -3,17 +3,18 @@ import cookie from "react-cookies";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Row, Col, Image } from "react-bootstrap";
+import util from "../utils";
 
 const axios = require("axios");
 
 class ImageUploader extends Component {
   state = {
     file: null,
-    image:
-      "http://localhost:3001/profileImage/" +
-      (cookie.load("Buyer")
+    image: `${util.base_url}/profileImage/${
+      cookie.load("Buyer")
         ? "Buyer" + cookie.load("Buyer")
-        : "Owner" + cookie.load("Owner"))
+        : "Owner" + cookie.load("Owner")
+    }`
   };
   handleChange = e => {
     this.setState({
@@ -35,11 +36,7 @@ class ImageUploader extends Component {
       param = "Buyer" + cookie.load("Buyer");
     } else param = "Owner" + cookie.load("Owner");
     axios
-      .post(
-        "http://localhost:3001/profileImage/upload/" + param,
-        formData,
-        config
-      )
+      .post(`${util.base_url}/profileImage/upload/${param}`, formData, config)
       .then(response => {
         alert("successfully uploaded");
       });

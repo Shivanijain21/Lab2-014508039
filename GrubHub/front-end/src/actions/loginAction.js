@@ -1,12 +1,13 @@
 import { FETCH_CRED, LOGOUT } from "./types";
 import axios from "axios";
+import util from "../utils";
 // import cookie from "react-cookies";
 
 export const fetchcred = data => dispatch => {
   console.log("in action: authenticating login cred");
   axios.defaults.withCredentials = true;
   axios
-    .post("http://localhost:3001/login", data)
+    .post(`${util.base_url}/login`, data)
     .then(response => response.data)
     .then(auth =>
       dispatch({

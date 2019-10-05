@@ -3,6 +3,7 @@ import Axios from "axios";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import Navbar from "../navbar";
+import util from "../../utils";
 
 class OwnerMenu extends Component {
   state = {
@@ -16,8 +17,7 @@ class OwnerMenu extends Component {
   };
   componentWillMount() {
     let restId = cookie.load("Owner");
-    // console.log(restId);
-    Axios.get("http://localhost:3001/menu/section/" + restId).then(response => {
+    Axios.get(`${util.base_url}/menu/section/${restId}`).then(response => {
       console.log(response.data);
       this.setState({ section: response.data, restId: restId });
     });
@@ -33,10 +33,10 @@ class OwnerMenu extends Component {
     };
     // console.log(data);
 
-    Axios.post("http://localhost:3001/menu/addSection", data).then(response => {
+    Axios.post(`${util.base_url}/menu/addSection`, data).then(response => {
       console.log(response.data);
       if (response.data === 200) {
-        Axios.get("http://localhost:3001/menu/section/" + data.restId).then(
+        Axios.get(`${util.base_url}/menu/section/${data.restId}`).then(
           response => {
             console.log(response.data);
             let addsection = {
@@ -72,23 +72,21 @@ class OwnerMenu extends Component {
       restId: this.state.restId
     };
     console.log(data);
-    Axios.post("http://localhost:3001/menu/deleteSection", data).then(
-      response => {
-        console.log(response.data);
-        if (response.data === 200) {
-          Axios.get("http://localhost:3001/menu/section/" + data.restId).then(
-            response => {
-              console.log(response.data);
-              this.setState({
-                section: response.data,
-                showAddSection: false,
-                errorMessage: 200
-              });
-            }
-          );
-        } else this.setState({ errorMessage: 500 });
-      }
-    );
+    Axios.post(`${util.base_url}/menu/deleteSection`, data).then(response => {
+      console.log(response.data);
+      if (response.data === 200) {
+        Axios.get(`${util.base_url}/menu/section/${data.restId}`).then(
+          response => {
+            console.log(response.data);
+            this.setState({
+              section: response.data,
+              showAddSection: false,
+              errorMessage: 200
+            });
+          }
+        );
+      } else this.setState({ errorMessage: 500 });
+    });
   };
   redirectToItem = e => {
     const url = "/itemList/" + e.currentTarget.name;

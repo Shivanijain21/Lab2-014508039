@@ -4,6 +4,7 @@ import Axios from "axios";
 import Navbar from "../navbar";
 import { Modal, Button } from "react-bootstrap";
 import { resolve } from "dns";
+import util from "../../utils";
 
 class OwnerHome extends Component {
   state = {
@@ -14,14 +15,14 @@ class OwnerHome extends Component {
   };
   componentWillMount() {
     let rest_id = cookie.load("Owner");
-    Axios.get("http://localhost:3001/order/rest/ongoing/" + rest_id).then(
+    Axios.get(`${util.base_url}/order/rest/ongoing/${rest_id}`).then(
       response => {
         console.log(response.data);
         let onGoingOrders = response.data;
         this.setState({ onGoingOrders: onGoingOrders, rest_id: rest_id });
       }
     );
-    Axios.get("http://localhost:3001/order/rest/complete/" + rest_id).then(
+    Axios.get(`${util.base_url}/order/rest/complete/${rest_id}`).then(
       response => {
         console.log(response.data);
         let completedOrders = response.data;
@@ -46,20 +47,20 @@ class OwnerHome extends Component {
       orderStatus: eachOrder.orderStatus
     };
     console.log(data);
-    Axios.post("http://localhost:3001/order/rest/changeStatus", data).then(
+    Axios.post(`${util.base_url}/order/rest/changeStatus`, data).then(
       response => {
         console.log(response.data);
         let onGoingOrders = response.data;
-        Axios.get(
-          "http://localhost:3001/order/rest/complete/" + data.rest_id
-        ).then(response => {
-          console.log(response.data);
-          let completedOrders = response.data;
-          this.setState({
-            completedOrders: completedOrders,
-            onGoingOrders: onGoingOrders
-          });
-        });
+        Axios.get(`${util.base_url}/order/rest/complete/${data.rest_id}`).then(
+          response => {
+            console.log(response.data);
+            let completedOrders = response.data;
+            this.setState({
+              completedOrders: completedOrders,
+              onGoingOrders: onGoingOrders
+            });
+          }
+        );
       }
     );
   };

@@ -4,6 +4,7 @@ import RestuarantCards from "./RestuarantCards";
 import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import Navbar from "./navbar";
+import util from "../utils";
 
 class SearchResult extends Component {
   state = {
@@ -12,7 +13,7 @@ class SearchResult extends Component {
   };
   componentWillMount() {
     if (this.props.match.params.searchString === "null") {
-      Axios.get("http://localhost:3001/search/").then(response => {
+      Axios.get(`${util.base_url}/search/`).then(response => {
         const data = response.data;
         console.log("In search result");
         console.log(data);
@@ -20,7 +21,7 @@ class SearchResult extends Component {
       });
     } else {
       Axios.get(
-        "http://localhost:3001/search/" + this.props.match.params.searchString
+        `${util.base_url}/search/${this.props.match.params.searchString}`
       )
         .then(response => {
           const data = response.data;

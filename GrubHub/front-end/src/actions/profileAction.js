@@ -1,14 +1,15 @@
 import { FETCH_PROFILE, UPDATE_PROFILE } from "./types";
 import axios from "axios";
 import cookie from "react-cookies";
+import util from "../utils";
 
 export const fetchProfile = () => dispatch => {
   console.log("in profile action: fetching profile");
   let url;
   if (cookie.load("Buyer")) {
-    url = "http://localhost:3001/buyer/profile/" + cookie.load("Buyer");
+    url = `${util.base_url}/buyer/profile/${cookie.load("Buyer")}`;
   } else if (cookie.load("Owner")) {
-    url = "http://localhost:3001/owner/profile/" + cookie.load("Owner");
+    url = `${util.base_url}/owner/profile/${cookie.load("Owner")}`;
   }
   axios
     .get(url)
@@ -28,9 +29,9 @@ export const updateProfile = postData => dispatch => {
   let url;
   console.log("in profile action: update profile");
   if (cookie.load("Buyer")) {
-    url = "http://localhost:3001/buyer/profileUpdate/" + cookie.load("Buyer");
+    url = `${util.base_url}/buyer/profileUpdate/${cookie.load("Buyer")}`;
   } else if (cookie.load("Owner")) {
-    url = "http://localhost:3001/owner/profileUpdate/" + cookie.load("Owner");
+    url = `${util.base_url}/owner/profileUpdate/${cookie.load("Owner")}`;
   }
   axios
     .post(url, postData)

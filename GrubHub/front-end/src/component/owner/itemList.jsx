@@ -4,6 +4,7 @@ import Axios from "axios";
 import Navbar from "../navbar";
 import { Button, Modal } from "react-bootstrap";
 import { Redirect } from "react-router";
+import util from "../../utils";
 
 class ItemList extends Component {
   state = {
@@ -34,10 +35,10 @@ class ItemList extends Component {
       sectionName: sectionName
     };
     let Items = [];
-    Axios.post("http://localhost:3001/menu", data).then(response => {
+    Axios.post(`${util.base_url}/menu`, data).then(response => {
       Items = [...response.data];
       Items.forEach(item => {
-        item.image = "http://localhost:3001/profileImage/item" + item.item_id;
+        item.image = `${util.base_url}/profileImage/item${item.item_id}`;
       });
       console.log(Items);
       this.setState({
@@ -61,7 +62,7 @@ class ItemList extends Component {
       sectionName: this.state.sectionName
     };
     let Items = [];
-    Axios.post("http://localhost:3001/menu/addItem", data)
+    Axios.post(`${util.base_url}/menu/addItem`, data)
       .then(response => {
         console.log("in insert item");
 
@@ -99,7 +100,7 @@ class ItemList extends Component {
     };
     console.log(data);
     let Items = [];
-    Axios.post("http://localhost:3001/menu/deleteItem", data)
+    Axios.post(`${util.base_url}/menu/deleteItem`, data)
       .then(response => {
         console.log("in delete item");
         Items = [...response.data];
@@ -135,7 +136,7 @@ class ItemList extends Component {
     data.sectionName = this.state.sectionName;
     data.restId = this.state.restId;
     let Items = [];
-    Axios.post("http://localhost:3001/menu/editItem", data)
+    Axios.post(`${util.base_url}/menu/editItem`, data)
       .then(response => {
         console.log("in insert item");
         console.log(response.data);
@@ -164,7 +165,7 @@ class ItemList extends Component {
     let param;
     param = "item" + this.state.ItemUpdate.itemId;
     Axios.post(
-      "http://localhost:3001/profileImage/upload/" + param,
+      `${util.base_url}/profileImage/upload/${param}`,
       formData,
       config
     ).then(response => {

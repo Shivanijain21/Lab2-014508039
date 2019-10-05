@@ -4,6 +4,7 @@ import image from "../../Images/pizza.jpg";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import cookie from "react-cookies";
+import util from "../../utils";
 
 class BuyerHome extends Component {
   state = {
@@ -16,7 +17,8 @@ class BuyerHome extends Component {
   };
   componentWillMount() {
     let buyer_id = cookie.load("Buyer");
-    Axios.get("http://localhost:3001/order/" + buyer_id).then(response => {
+    console.log(util.base_url);
+    Axios.get(`${util.base_url}/order/${buyer_id}`).then(response => {
       // console.log(response.data);
       let Orders = response.data;
       console.log(Orders);
