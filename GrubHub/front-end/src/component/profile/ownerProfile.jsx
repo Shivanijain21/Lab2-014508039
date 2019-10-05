@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { updateProfile, fetchProfile } from "../../actions/profileAction";
 import PropTypes from "prop-types";
+import { Image } from "react-bootstrap";
+import cookie from "react-cookies";
+import Axios from "axios";
 
 class OwnerProfile extends Component {
   state = {
@@ -16,7 +19,9 @@ class OwnerProfile extends Component {
       cuisine: "",
       restuarant_add: "",
       restuarant_zip: ""
-    }
+    },
+    file: null,
+    image: ""
   };
 
   componentWillMount() {
@@ -26,7 +31,8 @@ class OwnerProfile extends Component {
     console.log("in recieve prop");
     console.log(profile);
     let owner = Object.assign({}, profile);
-    this.setState({ owner });
+    let image = "http://localhost:3001/profileImage/Rest" + owner.rest_id;
+    this.setState({ owner: owner, image: image });
   }
   handleUpdate = e => {
     e.preventDefault();
@@ -41,10 +47,63 @@ class OwnerProfile extends Component {
     owner[input.name] = input.value;
     this.setState({ owner });
   };
+  handleUpload = e => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("Image", this.state.file);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data"
+      }
+    };
+    let param;
+    param = "Rest" + cookie.load("Owner");
+    Axios.post(
+      "http://localhost:3001/profileImage/upload/" + param,
+      formData,
+      config
+    ).then(response => {
+      alert("successfully uploaded");
+    });
+  };
+  handleImageChange = e => {
+    this.setState({
+      file: e.target.files[0]
+    });
+  };
   render() {
     const owner = this.state.owner;
     return (
       <div>
+        <div>
+          <div className="row">
+            <div className="col-sm-3">
+              <Image
+                src={this.state.image}
+                roundedCircle
+                style={{ height: "100%", width: "100%" }}
+                alt="restuarantImg"
+              />
+            </div>
+          </div>
+          <div className="row" className="mt-5">
+            <form onSubmit={this.handleUpload}>
+              <div className="row">
+                <input
+                  type="file"
+                  name="Image"
+                  className="col-sm-6"
+                  onChange={this.handleImageChange}
+                />
+              </div>
+              <div className="row">
+                <button type="submit" className="btn btn-primary col-sm-4">
+                  Upload
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
         <form onSubmit={this.handleUpdate}>
           <div className="row">
             <div className="form-group col-sm-6">

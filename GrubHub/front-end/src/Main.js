@@ -26,8 +26,8 @@ class Main extends Component {
           <Route path="/signup" component={SignUp} />
           <Route path="/restuarant/:id" component={Restuarant} />
           <Route path="/searchResult/:searchString" component={SearchResult} />
-          <Route path="/itemList/:section" component={ItemList} />
           <Route path="/restuarantMenu" component={Menu} />
+          <Route path="/itemList/:section" component={ItemList} />
           <Route path="/cart" component={Cart} />
         </div>
       </Provider>

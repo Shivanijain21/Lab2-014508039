@@ -63,7 +63,6 @@ class SearchResult extends Component {
         </div>
       );
     }
-    // console.log(this.state.dataSet);
     return (
       <div class="container-fluid">
         {redirectVar}

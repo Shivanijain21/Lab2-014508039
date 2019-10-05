@@ -8,6 +8,7 @@ import { resolve } from "dns";
 class OwnerHome extends Component {
   state = {
     onGoingOrders: [],
+    completedOrders: [],
     rest_id: "",
     pastOrders: []
   };
@@ -18,6 +19,13 @@ class OwnerHome extends Component {
         console.log(response.data);
         let onGoingOrders = response.data;
         this.setState({ onGoingOrders: onGoingOrders, rest_id: rest_id });
+      }
+    );
+    Axios.get("http://localhost:3001/order/rest/complete/" + rest_id).then(
+      response => {
+        console.log(response.data);
+        let completedOrders = response.data;
+        this.setState({ completedOrders: completedOrders });
       }
     );
   }
@@ -42,14 +50,25 @@ class OwnerHome extends Component {
       response => {
         console.log(response.data);
         let onGoingOrders = response.data;
-        this.setState({ onGoingOrders: onGoingOrders });
+        Axios.get(
+          "http://localhost:3001/order/rest/complete/" + data.rest_id
+        ).then(response => {
+          console.log(response.data);
+          let completedOrders = response.data;
+          this.setState({
+            completedOrders: completedOrders,
+            onGoingOrders: onGoingOrders
+          });
+        });
       }
     );
   };
 
   render() {
     console.log(this.state.onGoingOrders);
-    let displayBlock = null;
+    console.log(this.state.completedOrders);
+    let displayBlock,
+      completedOrders = null;
     if (this.state.onGoingOrders.length != 0) {
       displayBlock = this.state.onGoingOrders.map(eachOrder => (
         <div class="card col-sm-3">
@@ -61,7 +80,7 @@ class OwnerHome extends Component {
             <div className="row justify-content-sm-center">
               <form onSubmit={e => this.handleSubmit(e, eachOrder)}>
                 <label>
-                  Pick your favorite flavor:
+                  Order Status:
                   <select
                     value={eachOrder.orderStatus}
                     onChange={e => this.handleChange(e, eachOrder)}
@@ -70,7 +89,7 @@ class OwnerHome extends Component {
                     <option value="Preparing">Preparing</option>
                     <option value="Delivering">Delivering</option>
                     <option value="Delivered">Delivered</option>
-                    <option value="Cancel">Cancelled</option>
+                    <option value="Cancelled">Cancel</option>
                   </select>
                 </label>
                 <input type="submit" value="Submit" />
@@ -79,12 +98,52 @@ class OwnerHome extends Component {
           </div>
         </div>
       ));
+    } else {
+      displayBlock = (
+        <div className="card col-sm-3">
+          <h2>No Pending Orders</h2>
+        </div>
+      );
+    }
+    if (this.state.completedOrders.length != 0) {
+      completedOrders = (
+        <div className="row mt-5">
+          <h2 className="col-sm-12">Completed Orders</h2>
+          {this.state.completedOrders.map(eachOrder => (
+            <div className="card col-sm-3">
+              <div className="card-body">
+                <div>
+                  <h5>Buyer Name</h5>
+                  <p>{eachOrder.name}</p>
+                </div>
+                <div>
+                  <h5>Order Details</h5>
+                  <p>{eachOrder.orderDescription}</p>
+                </div>
+                <div>
+                  <h5>Total Price</h5>
+                  <p>{eachOrder.totalPrice}</p>
+                </div>
+                <div>
+                  <h5>Delivery Address</h5>
+                  <p>{eachOrder.address}</p>
+                </div>
+                <div>
+                  <h5>Order Status</h5>
+                  <p>{eachOrder.orderStatus}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
     }
     return (
       <div className="container-fluid">
-        <h2>Manage Orders</h2>
         <div className="container">
+          <h2>Manage Orders</h2>
           <div className="row">{displayBlock}</div>
+          {completedOrders}
         </div>
       </div>
     );

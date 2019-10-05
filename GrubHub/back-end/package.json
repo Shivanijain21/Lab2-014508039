@@ -4,16 +4,19 @@
   "description": "grubHub backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timeout 10000"
   },
   "author": "Shivani Jain",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.6",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "fs": "0.0.1-security",
+    "mocha": "^6.2.1",
     "multer": "^1.4.2",
     "mysql": "^2.17.1",
     "path": "^0.12.7"

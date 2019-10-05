@@ -62,6 +62,7 @@ class BuyerProfile extends Component {
                 className="form-control"
                 name="name"
                 id="name"
+                required
                 onChange={this.handleChange}
                 value={buyer.name}
               />

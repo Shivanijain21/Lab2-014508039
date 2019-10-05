@@ -5,6 +5,8 @@ import { Link as Alink } from "react-router-dom";
 import Menu from "./menu";
 import Axios from "axios";
 import CustomNavbar from "./navbar";
+import { Redirect } from "react-router";
+import cookie from "react-cookies";
 
 class Restuarant extends Component {
   state = {
@@ -34,13 +36,18 @@ class Restuarant extends Component {
   }
 
   render() {
+    let redirectVar = null;
     const imageStyle = {
       width: "100%",
       height: "300px",
       backgroundColor: "grey"
     };
+    if (!cookie.load("Buyer")) {
+      redirectVar = <Redirect to="/login" />;
+    }
     return (
       <div class="container-fluid">
+        {redirectVar}
         <CustomNavbar />
         <div className="row">
           <img

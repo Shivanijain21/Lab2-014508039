@@ -30,7 +30,11 @@ class CustomNav extends Component {
       console.log("Able to read cookie");
       if (cookie.load("Buyer")) {
         homelink = "/home";
-        customLink = "Cart";
+        customLink = (
+          <Link to="/cart" className="linkinNav nav-link">
+            Cart
+          </Link>
+        );
       } else {
         homelink = "/home";
         customLink = (

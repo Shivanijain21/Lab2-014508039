@@ -9,7 +9,10 @@ class BuyerHome extends Component {
   state = {
     searchString: null,
     dataSet: [],
-    orders: {}
+    orders: {
+      pastOrders: [],
+      upComingOrders: []
+    }
   };
   componentWillMount() {
     let buyer_id = cookie.load("Buyer");
@@ -45,8 +48,8 @@ class BuyerHome extends Component {
       console.log("/search/" + searchString);
     };
     const url = "/searchResult/" + this.state.searchString;
-
-    if (this.state.orders.pastOrders) {
+    console.log(this.state);
+    if (this.state.orders.pastOrders.length != 0) {
       PastOrder = this.state.orders.pastOrders.map(order => (
         <Card className="col-sm-4">
           <h2>{order.restuarant_name}</h2>
@@ -62,7 +65,7 @@ class BuyerHome extends Component {
         </Card>
       );
 
-    if (this.state.orders.upComingOrders) {
+    if (this.state.orders.upComingOrders.length != 0) {
       UpcomingOrder = (
         <div className="row my-5">
           <h2 className="col-sm-12">Upcoming Orders</h2>
@@ -90,7 +93,7 @@ class BuyerHome extends Component {
             >
               <input
                 type="text"
-                placeholder="cuisine"
+                placeholder="food Item or Restuarant Name"
                 className="col-sm-4 mr-sm-2 form-control"
                 value={this.state.searchString}
                 onChange={this.handleChange}

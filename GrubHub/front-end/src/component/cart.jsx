@@ -50,6 +50,9 @@ class Cart extends Component {
   render() {
     let displayBlock,
       redirectVar = null;
+    if (!cookie.load("Buyer")) {
+      redirectVar = <Redirect to="/login" />;
+    }
     if (this.state.cart == {}) {
       displayBlock = (
         <div className="alert alert-danger">There are currently no items</div>

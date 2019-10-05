@@ -99,7 +99,7 @@ class OwnerMenu extends Component {
       sectionCard,
       redirectVar,
       redirectToItemlist = null;
-    if (cookie.load("Owner")) {
+    if (!cookie.load("Owner")) {
       redirectVar = <Redirect to="/login" />;
     }
     if (this.state.url) {

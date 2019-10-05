@@ -23,7 +23,8 @@ class ItemList extends Component {
       description: "",
       itemId: ""
     },
-    errorFlag: ""
+    errorFlag: "",
+    file: null
   };
   componentWillMount() {
     let restId = cookie.load("Owner");
@@ -35,6 +36,9 @@ class ItemList extends Component {
     let Items = [];
     Axios.post("http://localhost:3001/menu", data).then(response => {
       Items = [...response.data];
+      Items.forEach(item => {
+        item.image = "http://localhost:3001/profileImage/item" + item.item_id;
+      });
       console.log(Items);
       this.setState({
         restId: restId,
@@ -97,13 +101,8 @@ class ItemList extends Component {
     let Items = [];
     Axios.post("http://localhost:3001/menu/deleteItem", data)
       .then(response => {
-        console.log("in insert item");
-
+        console.log("in delete item");
         Items = [...response.data];
-        Items.forEach(item => {
-          item.onUpdate = "";
-        });
-
         this.setState({ Items: Items, errorFlag: "" });
       })
       .catch(err => {
@@ -122,6 +121,7 @@ class ItemList extends Component {
     this.setState({ ItemUpdate: ItemUpdate, showItemModal: showItemModal });
   };
   handleClose = () => {
+    window.location.reload();
     this.setState({ showItemModal: false });
   };
   handleUpdateChanges = ({ currentTarget: input }) => {
@@ -147,7 +147,30 @@ class ItemList extends Component {
         this.setState({ errorFlag: err.response.data, showItemModal: false });
       });
   };
-
+  handleImageChange = e => {
+    this.setState({
+      file: e.target.files[0]
+    });
+  };
+  handleUpload = e => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("Image", this.state.file);
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data"
+      }
+    };
+    let param;
+    param = "item" + this.state.ItemUpdate.itemId;
+    Axios.post(
+      "http://localhost:3001/profileImage/upload/" + param,
+      formData,
+      config
+    ).then(response => {
+      alert("successfully uploaded");
+    });
+  };
   render() {
     let ItemList,
       errorBlock,
@@ -173,8 +196,13 @@ class ItemList extends Component {
       ItemList = this.state.Items.map(item => (
         <div class="col-sm-12 my-1 item">
           <div className="row justify-content-md-center py-1">
+            <img
+              src={item.image}
+              style={{ height: "60px" }}
+              className="col-sm-1"
+            />
             <div className="col-sm-3 my-auto">{item.item_name}</div>
-            <div className="col-sm-3 my-auto">{item.price}</div>
+            <div className="col-sm-1 my-auto">{item.price}</div>
             <div className="col-sm-3 my-auto">{item.description}</div>
             <button
               className="btn btn-danger col-sm-1"
@@ -263,6 +291,21 @@ class ItemList extends Component {
               <Modal.Title>{this.state.ItemUpdate.item_name}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+              <form onSubmit={e => this.handleUpload(e, this.state.ItemUpdate)}>
+                <div className="row">
+                  <input
+                    type="file"
+                    name="Image"
+                    className="col-sm-6"
+                    onChange={this.handleImageChange}
+                  />
+                </div>
+                <div className="row">
+                  <button type="submit" className="btn btn-primary col-sm-4">
+                    Upload
+                  </button>
+                </div>
+              </form>
               <form onSubmit={this.itemUpdate}>
                 <label htmlFor="ItemName">item Name</label>
                 <input

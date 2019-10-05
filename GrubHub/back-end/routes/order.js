@@ -78,6 +78,27 @@ router.get("/rest/ongoing/:id", (req, res) => {
     }
   });
 });
+router.get("/rest/complete/:id", (req, res) => {
+  id = req.params.id;
+  selectQuery = `Select orderId, orderStatus, orderDescription, totalPrice,Buyer.name, Buyer.address from grubHubDb.Order Inner join Buyer On grubHubDb.Order.BuyerID = Buyer.buyer_id where grubHubDb.Order.restID = "${id}" and grubHubDb.Order.orderStatus in ('Delivered', 'Cancelled');`;
+  console.log(selectQuery);
+  pool.query(selectQuery, (err, result) => {
+    if (!err) {
+      console.log("Inside order js ");
+      res.writeHead(200, {
+        "Content-Type": "application/Json"
+      });
+      console.log(JSON.stringify(result));
+      res.end(JSON.stringify(result));
+    } else {
+      console.log(err);
+      res.writeHead(500, {
+        "Content-Type": "plain/text"
+      });
+      res.end("500");
+    }
+  });
+});
 router.post("/rest/changeStatus", (req, res) => {
   data = req.body;
   UpdateQuery = `Update grubHubDb.Order Set orderStatus="${data.orderStatus}" where grubHubDb.Order.orderId = "${data.orderId}";`;
