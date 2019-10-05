@@ -9,21 +9,6 @@ const pool = mysql.createPool({
   multipleStatements: true
 });
 
-// router.post("/", (req, res) => {
-//   id = req.body.id;
-//   selectQuery = `select * from Buyer where buyer_id = '${id}';`;
-//   pool.query(selectQuery, (err, result) => {
-//     if (!err) {
-//       console.log("Inside buyer js ");
-//       res.writeHead(200, {
-//         "Content-Type": "application/json"
-//       });
-//       console.log("Buyer : ", JSON.stringify(result[0]));
-//       res.end(JSON.stringify(result[0]));
-//     }
-//   });
-// });
-
 // buyer/profile
 router.get("/profile/:id", (req, res) => {
   console.log("in buyer profile");
