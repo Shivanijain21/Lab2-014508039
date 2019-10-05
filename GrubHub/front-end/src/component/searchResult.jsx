@@ -8,7 +8,7 @@ import Navbar from "./navbar";
 class SearchResult extends Component {
   state = {
     dataSet: [],
-    cuisine: ""
+    totalDataSet: []
   };
   componentWillMount() {
     if (this.props.match.params.searchString === "null") {
@@ -16,7 +16,7 @@ class SearchResult extends Component {
         const data = response.data;
         console.log("In search result");
         console.log(data);
-        this.setState({ dataSet: data });
+        this.setState({ dataSet: data, totalDataSet: data });
       });
     } else {
       Axios.get(
@@ -26,19 +26,21 @@ class SearchResult extends Component {
           const data = response.data;
           console.log("In search result");
           console.log(data);
-          this.setState({ dataSet: data });
+          this.setState({ dataSet: data, totalDataSet: data });
         })
         .catch(err => console.log(err));
     }
   }
 
-  handleOptionChange = e => {
-    const user = { ...this.state };
-    user.cuisine = e.currentTarget.value;
-    user.dataSet = this.state.dataSet.filter(
-      data => data.cuisine === user.cuisine
-    );
-    this.setState(user);
+  handleChange = e => {
+    let dataSet = this.state.dataSet;
+    const cuisine = e.currentTarget.value;
+    if (cuisine !== "All") {
+      dataSet = this.state.totalDataSet.filter(
+        data => data.cuisine === cuisine
+      );
+    } else dataSet = this.state.totalDataSet;
+    this.setState({ dataSet: dataSet });
   };
   render() {
     let redirectVar = null;
@@ -70,33 +72,16 @@ class SearchResult extends Component {
         <div class="row mt-5">
           <div className="col-sm-3">
             <h2>Filter using cuisine</h2>
-            <div className="radio">
-              <label>You are a: </label>
-              <label className="px-2">
-                <input
-                  className="mr-2"
-                  type="radio"
-                  value="Indian"
-                  name="cuisine"
-                  checked={this.state.cuisine === "Indian"}
-                  onChange={this.handleOptionChange}
-                  required
-                />
-                Indian
-              </label>
-              <label className="px-2">
-                <input
-                  className="mr-2"
-                  type="radio"
-                  value="Mexican"
-                  name="cuisine"
-                  checked={this.state.cuisine === "Mexican" ? true : false}
-                  onChange={this.handleOptionChange}
-                  required
-                />
-                Mexican
-              </label>
-            </div>
+            <label>
+              <select onChange={this.handleChange}>
+                <option value="All">All</option>
+                <option value="Indian">Indian</option>
+                <option value="Chinese">Chinese</option>
+                <option value="American">American</option>
+                <option value="mexican">mexican</option>
+                <option value="Japanese">Japanese</option>
+              </select>
+            </label>
           </div>
           {restuarantList}
         </div>

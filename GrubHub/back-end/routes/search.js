@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 
 // search String
 router.get("/", (req, res) => {
-  let selectQuery = `SELECT rest_id,restuarant_name,restuarant_dp from Owner;`;
+  let selectQuery = `SELECT rest_id,restuarant_name,restuarant_dp,cuisine from Owner;`;
   pool.query(selectQuery, (err, result) => {
     console.log(result);
     if (!err) {
