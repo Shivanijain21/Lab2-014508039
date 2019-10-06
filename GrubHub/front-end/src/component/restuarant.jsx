@@ -115,13 +115,13 @@ class Restuarant extends Component {
                 Review
               </Link>
             </Nav.Item>
+            <button className="col-sm-12">
+              <Alink to="/cart" className="btn btn-primary">
+                Checkout
+              </Alink>
+            </button>
           </Nav>
         </Navbar>
-        <button>
-          <Alink to="/cart" className="btn btn-primary">
-            View cart
-          </Alink>
-        </button>
         <div className="container">
           <div id="menu">
             <h2>Menu</h2>

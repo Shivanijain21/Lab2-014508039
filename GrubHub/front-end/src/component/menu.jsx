@@ -74,22 +74,20 @@ class Menu extends Component {
       });
 
       itemList.push(
-        <Card>
-          <Accordion.Toggle as={Card.Header} eventKey={menuItem}>
-            {menuItem}
-          </Accordion.Toggle>
-          <Accordion.Collapse eventKey={menuItem}>
-            <div>{itemDesc}</div>
-          </Accordion.Collapse>
-        </Card>
+        <Accordion defaultActiveKey={menuItem}>
+          <Card>
+            <Accordion.Toggle as={Card.Header} eventKey={menuItem}>
+              {menuItem}
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={menuItem}>
+              <div>{itemDesc}</div>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion>
       );
     }
 
-    return (
-      <div ClassName="container">
-        <Accordion>{itemList}</Accordion>
-      </div>
-    );
+    return <div ClassName="container">{itemList}</div>;
   }
 }
 
