@@ -4,6 +4,7 @@ import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import Navbar from "../navbar";
 import util from "../../utils";
+import { Modal, Button } from "react-bootstrap";
 
 class OwnerMenu extends Component {
   state = {
@@ -13,7 +14,14 @@ class OwnerMenu extends Component {
       sectionName: "",
       description: ""
     },
-    showAddSection: false
+    updateSection: {
+      section_id: "",
+      section_name: "",
+      description: "",
+      prevSectionName: ""
+    },
+    showAddSection: false,
+    showUpdateModal: false
   };
   componentWillMount() {
     let restId = cookie.load("Owner");
@@ -92,7 +100,55 @@ class OwnerMenu extends Component {
     const url = "/itemList/" + e.currentTarget.name;
     this.setState({ url: url });
   };
+  handleUpdateModal = section => {
+    let updateSection = {
+      section_id: section.section_id,
+      section_name: section.section_name,
+      prevSectionName: section.section_name,
+      description: section.description
+    };
+    let showUpdateModal = !this.state.showUpdateModal;
+    this.setState({
+      updateSection: updateSection,
+      showUpdateModal: showUpdateModal
+    });
+  };
+  handleClose = () => {
+    this.setState({ showUpdateModal: false });
+  };
+  handleUpdateChanges = ({ currentTarget: input }) => {
+    let updateSection = { ...this.state.updateSection };
+    updateSection[input.name] = input.value;
+    this.setState({ updateSection: updateSection });
+  };
+  handleSectionUpdate = e => {
+    e.preventDefault();
+    let data = {
+      restId: this.state.restId,
+      section_name: this.state.updateSection.section_name,
+      prevSectionName: this.state.updateSection.prevSectionName,
+      section_id: this.state.updateSection.section_id
+    };
+    console.log(data);
+    Axios.post(`${util.base_url}/menu/editSection`, data).then(response => {
+      console.log(response.data);
+      if (response.data === 200) {
+        Axios.get(`${util.base_url}/menu/section/${data.restId}`).then(
+          response => {
+            console.log(response.data);
+            this.setState({
+              section: response.data,
+              showUpdateModal: false,
+              errorMessage: 200
+            });
+          }
+        );
+      } else this.setState({ errorMessage: 500 });
+    });
+  };
   render() {
+    console.log("sections");
+    console.log(this.state.updateSection);
     let errorBlock,
       sectionCard,
       redirectVar,
@@ -165,6 +221,7 @@ class OwnerMenu extends Component {
         <div class="card col-sm-3">
           <div className="card-body m-1">
             <h2 className="text-center">{data.section_name}</h2>
+            <p className="text-center">{data.description}</p>
             <div className="row justify-content-sm-center">
               <button
                 type="button"
@@ -175,7 +232,12 @@ class OwnerMenu extends Component {
                 delete
               </button>
               <button
-                className="btn btn-secondary"
+                onClick={() => this.handleUpdateModal(data)}
+                className="btn btn-secondary ml-2"
+              >
+                Update
+              </button>
+              <button
                 name={data.section_name}
                 onClick={this.redirectToItem}
                 className="btn btn-primary ml-2"
@@ -198,6 +260,37 @@ class OwnerMenu extends Component {
             <div className="card col-sm-3">{displayCard}</div>
             {sectionCard}
           </div>
+          <Modal show={this.state.showUpdateModal} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>{this.state.updateSection.section_name}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={this.handleSectionUpdate}>
+                <label htmlFor="section_name">item Name</label>
+                <input
+                  type="text"
+                  value={this.state.updateSection.section_name}
+                  onChange={this.handleUpdateChanges}
+                  name="section_name"
+                />
+                <label htmlFor="description">Description</label>
+                <input
+                  type="text"
+                  value={this.state.updateSection.description}
+                  onChange={this.handleUpdateChanges}
+                  name="description"
+                />
+                <button type="submit" class="btn btn-primary">
+                  Update
+                </button>
+              </form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.handleClose}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </div>
       </div>
     );

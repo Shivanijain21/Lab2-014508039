@@ -46,6 +46,7 @@ class Restuarant extends Component {
     if (!cookie.load("Buyer")) {
       redirectVar = <Redirect to="/login" />;
     }
+    const imageUrl = `${util.base_url}/profileImage/Rest${this.state.restuarant.rest_id}`;
     return (
       <div class="container-fluid">
         {redirectVar}
@@ -53,6 +54,7 @@ class Restuarant extends Component {
         <div className="row">
           <img
             className="col-sm-12 rest-img-top mt-3"
+            src={imageUrl}
             style={imageStyle}
             alt="..."
           ></img>
@@ -115,12 +117,10 @@ class Restuarant extends Component {
                 Review
               </Link>
             </Nav.Item>
-            <button className="col-sm-12">
-              <Alink to="/cart" className="btn btn-primary">
-                Checkout
-              </Alink>
-            </button>
           </Nav>
+          <Alink to="/cart" className="btn btn-primary col-sm-3">
+            Checkout
+          </Alink>
         </Navbar>
         <div className="container">
           <div id="menu">

@@ -128,6 +128,38 @@ router.post("/deleteSection", (req, res) => {
   });
 });
 
+router.post("/editSection", (req, res) => {
+  data = req.body;
+  console.log(data);
+  updateItemsQuery = `UPDATE Item SET section='${data.section_name}' where restId = "${data.restId}" and section="${data.prevSectionName}";`;
+  pool.query(updateItemsQuery, (err, result) => {
+    if (!err) {
+      console.log("Update a section");
+      updateSectionQuery = `update Section SET section_name="${data.section_name}" where section_id="${data.section_id}";`;
+      pool.query(updateSectionQuery, (err, result) => {
+        if (!err) {
+          console.log("Inside delete a section");
+          res.writeHead(200, {
+            "Content-Type": "plain/text"
+          });
+          res.end("200");
+        } else {
+          console.log(err);
+          res.writeHead(200, {
+            "Content-Type": "plain/text"
+          });
+          res.end("500");
+        }
+      });
+    } else {
+      res.writeHead(200, {
+        "Content-Type": "plain/text"
+      });
+      res.end("500");
+    }
+  });
+});
+
 router.post("/addItem", (req, res) => {
   data = req.body;
   insertquery = `INSERT INTO Item (restId,price,section,item_name,description) VALUES ('${data.restId}','${data.price}','${data.sectionName}','${data.itemName}','${data.description}');`;

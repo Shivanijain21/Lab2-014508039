@@ -51,6 +51,9 @@ class Menu extends Component {
   };
   render() {
     const itemList = [];
+    const imageStyle = {
+      height: "100px"
+    };
     for (let menuItem in this.state.items) {
       let itemDesc = [];
 
@@ -60,15 +63,32 @@ class Menu extends Component {
         if (this.state.cart.hasOwnProperty(e.item_id)) {
           quantity = <p>{this.state.cart[e.item_id]["quantity"]}</p>;
         }
-
+        let imageUrl = `${util.base_url}/profileImage/item${this.state.rest_id}`;
         itemDesc.push(
-          <Card.Body>
-            <p>{e.item_name}</p>
-            <p>{e.description}</p>
-            <p>{e.price}</p>
-            <button onClick={() => this.addItem(e)}>+</button>
-            <button onClick={() => this.deductItem(e)}>-</button>
-            {quantity}
+          <Card.Body className="row">
+            <div className="col-sm-2">
+              <img src={imageUrl} style={imageStyle} />
+            </div>
+            <div className="col-sm-10">
+              <h5>{e.item_name}</h5>
+              <p>{e.description}</p>
+              <p>${e.price}</p>
+              <div className="row">
+                <button
+                  className="btn btn-danger mx-2"
+                  onClick={() => this.deductItem(e)}
+                >
+                  -
+                </button>
+                {quantity}
+                <button
+                  className="btn btn-danger mx-2"
+                  onClick={() => this.addItem(e)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
           </Card.Body>
         );
       });
@@ -86,7 +106,6 @@ class Menu extends Component {
         </Accordion>
       );
     }
-
     return <div ClassName="container">{itemList}</div>;
   }
 }
