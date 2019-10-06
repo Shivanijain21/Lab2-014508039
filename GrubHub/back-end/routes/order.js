@@ -1,17 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const mysql = require("mysql");
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "rootadmin",
-  database: "grubHubDb",
-  multipleStatements: true
-});
+const pool = require("../utility");
 
 router.get("/:id", (req, res) => {
   id = req.params.id;
-  fetchQuery = `SELECT Owner.restuarant_name, orderId, OrderStatus,orderDescription, totalPrice from GRubHubDb.Order inner join Owner on GRubHubDb.Order.restID = Owner.rest_id  where buyerID='${id}';`;
+  fetchQuery = `SELECT Owner.restuarant_name, orderId, OrderStatus,orderDescription, totalPrice from grubHubDb.Order inner join Owner on grubHubDb.Order.restID = Owner.rest_id  where buyerID='${id}';`;
   pool.query(fetchQuery, (err, result) => {
     if (!err) {
       let orders = {

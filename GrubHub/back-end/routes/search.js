@@ -1,13 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mysql = require("mysql");
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "rootadmin",
-  database: "grubHubDb",
-  multipleStatements: true
-});
+const pool = require("../utility");
 
 // search String
 router.get("/", (req, res) => {

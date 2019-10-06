@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import util from "../utils";
 
 class RestuarantCards extends Component {
   state = {
@@ -18,12 +19,18 @@ class RestuarantCards extends Component {
       height: "100px",
       backgroundColor: "grey"
     };
+    const imageUrl = `${util.base_url}/profileImage/Rest${this.state.rest_id}`;
     const restuarantPageUrl = "/restuarant/" + this.state.rest_id;
     return (
       <div class="row my-3">
         <Link to={restuarantPageUrl} className="col-sm-12">
           <div className="card">
-            <img className="card-img-top" style={imageStyle} alt="..."></img>
+            <img
+              src={imageUrl}
+              className="card-img-top"
+              style={imageStyle}
+              alt="..."
+            ></img>
             <div className="card-body">
               <h5 className="card-title">{this.state.restuarant_name}</h5>
               <p className="card-text">Deliver Time</p>

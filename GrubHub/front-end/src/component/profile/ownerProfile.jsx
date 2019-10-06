@@ -168,14 +168,19 @@ class OwnerProfile extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="cuisine">Cuisine</label>
-            <input
-              type="text"
-              className="form-control"
+            <select
               name="cuisine"
               id="cuisine"
-              onChange={this.handleChange}
+              className="form-control"
               value={owner.cuisine}
-            />
+              onChange={this.handleChange}
+            >
+              <option value="Indian">Indian</option>
+              <option value="Chinese">Chinese</option>
+              <option value="American">American</option>
+              <option value="mexican">mexican</option>
+              <option value="Japanese">Japanese</option>
+            </select>
           </div>
           <div className="form-group">
             <label htmlFor="restuarant_add">restuarant add</label>

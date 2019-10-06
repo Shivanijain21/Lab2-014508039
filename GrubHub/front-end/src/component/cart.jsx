@@ -24,7 +24,9 @@ class Cart extends Component {
         let e = cart[item];
         restId = e.restId;
         totalPrice += e.price * e.quantity;
-        totalOrder = totalOrder.concat(` ${e.name} x ${e.quantity} \b`);
+        totalOrder = totalOrder.concat(
+          `${e.name} x ${e.quantity}: ${e.price} \n`
+        );
       }
       this.setState({
         cart: cart,

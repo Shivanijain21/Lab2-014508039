@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql");
 const app = express();
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
@@ -14,19 +13,7 @@ const profileImage = require("./routes/profileImage");
 const search = require("./routes/search");
 const order = require("./routes/order");
 
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "rootadmin",
-  database: "grubHubDb",
-  multipleStatements: true
-});
-
 app.set("view engine", "ejs");
-
-pool.getConnection(err => {
-  return err;
-});
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
