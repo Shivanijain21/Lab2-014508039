@@ -15,7 +15,7 @@ const order = require("./routes/order");
 
 app.set("view engine", "ejs");
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "http://3.15.175.244:3000", credentials: true }));
 
 //use express session to maintain session data
 app.use(
