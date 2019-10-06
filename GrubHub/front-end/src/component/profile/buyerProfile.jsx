@@ -65,6 +65,7 @@ class BuyerProfile extends Component {
                 required
                 onChange={this.handleChange}
                 value={buyer.name}
+                required
               />
             </div>
           </div>
@@ -89,16 +90,17 @@ class BuyerProfile extends Component {
                 id="address"
                 onChange={this.handleChange}
                 value={buyer.address}
+                required
               />
             </div>
           </div>
 
-          <div className="row">
-            <button type="submit" className="col-sm-12 btn btn-primary">
+          <div className="row justify-content-between my-5">
+            <button type="submit" className="col-sm-5 btn btn-primary">
               Update
             </button>
 
-            <Link className="col-sm-12 btn btn-primary" to="/home">
+            <Link className="col-sm-5 btn btn-primary" to="/home">
               cancel
             </Link>
           </div>

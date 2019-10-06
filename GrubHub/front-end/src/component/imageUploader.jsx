@@ -38,7 +38,7 @@ class ImageUploader extends Component {
     axios
       .post(`${util.base_url}/profileImage/upload/${param}`, formData, config)
       .then(response => {
-        alert("successfully uploaded");
+        window.location.reload();
       });
   };
 
@@ -59,19 +59,20 @@ class ImageUploader extends Component {
         </Row>
         <Row className="mt-5">
           <form onSubmit={this.handleSubmit}>
-            <Row>
+            <div className="col-sm-12">
               <input
                 type="file"
                 name="Image"
-                className="col-sm-6"
+                className="col-sm-12 btn btn-secondary"
                 onChange={this.handleChange}
+                required
               />
-            </Row>
-            <Row>
-              <button type="submit" className="btn btn-primary col-sm-4">
+            </div>
+            <div className="col-sm-12">
+              <button type="submit" className="btn btn-primary col-sm-12">
                 Upload
               </button>
-            </Row>
+            </div>
           </form>
         </Row>
       </div>

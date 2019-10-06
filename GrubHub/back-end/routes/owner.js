@@ -23,7 +23,7 @@ router.post("/profileUpdate/:id", (req, res) => {
   data = req.body;
   id = req.params.id;
   console.log("In owner update profile" + data);
-  updateQuery = `UPDATE Owner SET name ='${data.name}',owner_dp='${data.owner_dp}',restuarant_name='${data.restuarant_name}',restuarant_dp='${data.restuarant_name}',cuisine='${data.cuisine}',restuarant_add='${data.restuarant_add}',restuarant_zip='${data.restuarant_zip}' WHERE (rest_id = '${id}');`;
+  updateQuery = `UPDATE Owner SET name ='${data.name}',restuarant_name='${data.restuarant_name}',cuisine='${data.cuisine}',restuarant_add='${data.restuarant_add}',restuarant_zip='${data.restuarant_zip}' WHERE (rest_id = '${id}');`;
   console.log(updateQuery);
   pool.query(updateQuery, (err, result) => {
     if (!err) {

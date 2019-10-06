@@ -54,10 +54,24 @@ class BuyerHome extends Component {
     if (this.state.orders.pastOrders.length != 0) {
       PastOrder = this.state.orders.pastOrders.map(order => (
         <Card className="col-sm-4">
-          <h2>{order.restuarant_name}</h2>
-          <p>{order.orderDescription}</p>
-          <p>{order.OrderStatus}</p>
-          <p>{order.totalPrice}</p>
+          <div className="card-body">
+            <div>
+              <h5>Restuarant Name</h5>
+              <p>{order.restuarant_name}</p>
+            </div>
+            <div>
+              <h5>Order Details</h5>
+              <p>{order.orderDescription}</p>
+            </div>
+            <div>
+              <h5>Total Price</h5>
+              <p>{order.totalPrice}</p>
+            </div>
+            <div>
+              <h5>Order Status</h5>
+              <p>{order.OrderStatus}</p>
+            </div>
+          </div>
         </Card>
       ));
     } else
@@ -73,10 +87,24 @@ class BuyerHome extends Component {
           <h2 className="col-sm-12">Upcoming Orders</h2>
           {this.state.orders.upComingOrders.map(order => (
             <Card className="col-sm-4">
-              <h2>{order.restuarant_name}</h2>
-              <p>{order.orderDescription}</p>
-              <p>{order.OrderStatus}</p>
-              <p>{order.totalPrice}</p>
+              <div className="card-body">
+                <div>
+                  <h5>Restuarant Name</h5>
+                  <p>{order.restuarant_name}</p>
+                </div>
+                <div>
+                  <h5>Order Details</h5>
+                  <p>{order.orderDescription}</p>
+                </div>
+                <div>
+                  <h5>Total Price</h5>
+                  <p>{order.totalPrice}</p>
+                </div>
+                <div>
+                  <h5>Order Status</h5>
+                  <p>{order.OrderStatus}</p>
+                </div>
+              </div>
             </Card>
           ))}
         </div>

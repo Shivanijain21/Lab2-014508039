@@ -60,7 +60,6 @@ router.get("/rest/ongoing/:id", (req, res) => {
       res.writeHead(200, {
         "Content-Type": "application/Json"
       });
-      console.log(JSON.stringify(result));
       res.end(JSON.stringify(result));
     } else {
       console.log(err);
@@ -81,7 +80,6 @@ router.get("/rest/complete/:id", (req, res) => {
       res.writeHead(200, {
         "Content-Type": "application/Json"
       });
-      console.log(JSON.stringify(result));
       res.end(JSON.stringify(result));
     } else {
       console.log(err);
@@ -106,7 +104,6 @@ router.post("/rest/changeStatus", (req, res) => {
           res.writeHead(200, {
             "Content-Type": "application/Json"
           });
-          console.log(JSON.stringify(result));
           res.end(JSON.stringify(result));
         } else {
           console.log(err);

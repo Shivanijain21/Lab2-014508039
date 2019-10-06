@@ -74,14 +74,26 @@ class OwnerHome extends Component {
       displayBlock = this.state.onGoingOrders.map(eachOrder => (
         <div class="card col-sm-3">
           <div className="card-body m-1">
-            <h2 className="text-center">{eachOrder.name}</h2>
-            <p>{eachOrder.orderDescription}</p>
-            <p>{eachOrder.totalPrice}</p>
-            <p>{eachOrder.address}</p>
+            <div>
+              <h5>Buyer Name</h5>
+              <p>{eachOrder.name}</p>
+            </div>
+            <div>
+              <h5>Order Details</h5>
+              <p>{eachOrder.orderDescription}</p>
+            </div>
+            <div>
+              <h5>Total Price</h5>
+              <p>{eachOrder.totalPrice}</p>
+            </div>
+            <div>
+              <h5>Delivery Address</h5>
+              <p>{eachOrder.address}</p>
+            </div>
             <div className="row justify-content-sm-center">
               <form onSubmit={e => this.handleSubmit(e, eachOrder)}>
                 <label>
-                  Order Status:
+                  <h2>Order Status:</h2>
                   <select
                     value={eachOrder.orderStatus}
                     onChange={e => this.handleChange(e, eachOrder)}

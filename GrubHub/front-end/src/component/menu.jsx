@@ -28,6 +28,7 @@ class Menu extends Component {
     if (cart.hasOwnProperty(e.item_id)) {
       let current_count = cart[e.item_id]["quantity"];
       cart[e.item_id]["quantity"] = current_count + 1;
+      cart[e.item_id]["price"] = eval(e.price * cart[e.item_id]["quantity"]);
     } else {
       cart[e.item_id] = {};
       cart[e.item_id]["quantity"] = 1;
@@ -44,6 +45,10 @@ class Menu extends Component {
       let current_count = cart[e.item_id]["quantity"];
       if (current_count != 0) {
         cart[e.item_id]["quantity"] = current_count - 1;
+        cart[e.item_id]["price"] = eval(e.price * cart[e.item_id]["quantity"]);
+        if (cart[e.item_id]["quantity"] == 0) {
+          delete cart[e.item_id];
+        }
       }
     }
     sessionStorage.setItem("cart", JSON.stringify(cart));

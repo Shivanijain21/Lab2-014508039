@@ -23,10 +23,10 @@ const Profile = () => {
       <Container>
         <Row>
           <br />
-          <div className="col-sm-2 mt-3">
+          <div className="col-sm-3 mt-3">
             <ImageUploader />
           </div>
-          <div class="col-sm-10 mt-3">{profileComponent}</div>
+          <div class="col-sm-9 mt-3">{profileComponent}</div>
         </Row>
       </Container>
     </div>

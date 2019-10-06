@@ -25,7 +25,7 @@ class Cart extends Component {
         restId = e.restId;
         totalPrice += e.price * e.quantity;
         totalOrder = totalOrder.concat(
-          `${e.name} x ${e.quantity}: ${e.price} \n`
+          `${e.name} x ${e.quantity}: ${e.price},`
         );
       }
       this.setState({
@@ -38,7 +38,6 @@ class Cart extends Component {
   }
   handleOrder = e => {
     e.preventDefault();
-    // let cart = this.state.cart;
     let data = {
       restId: this.state.restId,
       totalPrice: this.state.totalPrice,
@@ -97,6 +96,10 @@ class Cart extends Component {
         </div>
       </div>
     );
+    let disabled = true;
+    if (this.state.totalPrice != 0) {
+      disabled = false;
+    }
 
     return (
       <div ClassName="container-fluid">
@@ -104,7 +107,11 @@ class Cart extends Component {
         {redirectVar}
         <div className="container">
           <div className="row justify-content-sm-center">{displayBlock}</div>
-          <button className="btn btn-primary" onClick={this.handleOrder}>
+          <button
+            className="btn btn-primary"
+            onClick={this.handleOrder}
+            disabled={disabled}
+          >
             Place Order
           </button>
         </div>

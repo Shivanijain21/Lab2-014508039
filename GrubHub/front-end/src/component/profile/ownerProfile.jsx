@@ -14,9 +14,7 @@ class OwnerProfile extends Component {
       email: "",
       password: "",
       name: "",
-      owner_dp: "",
       restuarant_name: "",
-      restuarant_dp: "",
       cuisine: "",
       restuarant_add: "",
       restuarant_zip: ""
@@ -64,7 +62,7 @@ class OwnerProfile extends Component {
       formData,
       config
     ).then(response => {
-      alert("successfully uploaded");
+      window.location.reload();
     });
   };
   handleImageChange = e => {
@@ -77,8 +75,9 @@ class OwnerProfile extends Component {
     return (
       <div>
         <div>
-          <div className="row">
+          <div className="row justify-content-end">
             <div className="col-sm-3">
+              <h5>Restuarant Image</h5>
               <Image
                 src={this.state.image}
                 roundedCircle
@@ -87,21 +86,18 @@ class OwnerProfile extends Component {
               />
             </div>
           </div>
-          <div className="row" className="mt-5">
+          <div className="row justify-content-end mt-5">
             <form onSubmit={this.handleUpload}>
-              <div className="row">
-                <input
-                  type="file"
-                  name="Image"
-                  className="col-sm-6"
-                  onChange={this.handleImageChange}
-                />
-              </div>
-              <div className="row">
-                <button type="submit" className="btn btn-primary col-sm-4">
-                  Upload
-                </button>
-              </div>
+              <input
+                type="file"
+                name="Image"
+                className="col-sm-12 btn btn-secondary my-1"
+                onChange={this.handleImageChange}
+                required
+              />
+              <button type="submit" className="btn btn-primary col-sm-12">
+                Upload
+              </button>
             </form>
           </div>
         </div>
@@ -116,6 +112,7 @@ class OwnerProfile extends Component {
                 id="name"
                 onChange={this.handleChange}
                 value={owner.name}
+                required
               />
             </div>
           </div>
@@ -142,28 +139,7 @@ class OwnerProfile extends Component {
               id="restuarant_name"
               onChange={this.handleChange}
               value={owner.restuarant_name}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="owner_dp">owner dp</label>
-            <input
-              type="text"
-              className="form-control"
-              name="owner_dp"
-              id="owner_dp"
-              onChange={this.handleChange}
-              value={owner.owner_dp}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="restuarant_dp">restuarant dp</label>
-            <input
-              type="text"
-              className="form-control"
-              name="restuarant_dp"
-              id="restuarant_dp"
-              onChange={this.handleChange}
-              value={owner.restuarant_dp}
+              required
             />
           </div>
           <div className="form-group">
@@ -183,7 +159,7 @@ class OwnerProfile extends Component {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="restuarant_add">restuarant add</label>
+            <label htmlFor="restuarant_add">restuarant address</label>
             <input
               type="text"
               className="form-control"
@@ -194,7 +170,7 @@ class OwnerProfile extends Component {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="restuarant_zip">restuarant_zip</label>
+            <label htmlFor="restuarant_zip">restuarant zip</label>
             <input
               type="text"
               className="form-control"
@@ -204,12 +180,12 @@ class OwnerProfile extends Component {
               value={owner.restuarant_zip}
             />
           </div>
-          <div className="row">
-            <button type="submit" className="col-sm-12 btn btn-primary">
+          <div className="row justify-content-between mb-5">
+            <button type="submit" className="col-sm-5 btn btn-primary">
               Update
             </button>
-            <Link to="/home">
-              <button className="col-sm-12 btn btn-primary">cancel</button>
+            <Link to="/home" className="col-sm-5 btn btn-primary">
+              cancel
             </Link>
           </div>
         </form>
