@@ -34,7 +34,7 @@ router.post("/profileUpdate/:id", (req, res) => {
         "Content-Type": "plain/text"
       });
       res.end("updated");
-    }
+    } else console.log(err);
   });
 });
 

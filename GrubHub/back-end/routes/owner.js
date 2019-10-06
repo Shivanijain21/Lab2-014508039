@@ -2,21 +2,6 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../utility");
 
-// router.post("/", (req, res) => {
-//   id = req.body.id;
-//   selectQuery = `select * from Owner where rest_id = '${id}';`;
-//   pool.query(selectQuery, (err, result) => {
-//     if (!err) {
-//       console.log("Inside owner js ");
-//       res.writeHead(200, {
-//         "Content-Type": "application/json"
-//       });
-//       console.log("Owner : ", JSON.stringify(result[0]));
-//       res.end(JSON.stringify(result[0]));
-//     }
-//   });
-// });
-
 // owner/profile
 router.get("/profile/:id", (req, res) => {
   console.log("in owner profile");
