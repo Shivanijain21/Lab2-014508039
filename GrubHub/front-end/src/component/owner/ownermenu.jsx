@@ -266,7 +266,7 @@ class OwnerMenu extends Component {
             </Modal.Header>
             <Modal.Body>
               <form onSubmit={this.handleSectionUpdate}>
-                <label htmlFor="section_name">item Name</label>
+                <label htmlFor="section_name">Section Name</label>
                 <input
                   type="text"
                   value={this.state.updateSection.section_name}
