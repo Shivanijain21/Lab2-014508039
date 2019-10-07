@@ -16,7 +16,7 @@ it("Should check credentials and return status code", function(done) {
     });
 });
 
-it("should return status code 200 ", function(done) {
+it("search the restuarant name or food Item", function(done) {
   chai
     .request("http://127.0.0.1:3001")
     .get("/search")
@@ -27,7 +27,7 @@ it("should return status code 200 ", function(done) {
     });
 });
 
-it("gets the buyer id from params,fetches the order and returns status code 200 ", function(done) {
+it("fetches the order", function(done) {
   chai
     .request("http://127.0.0.1:3001")
     .get("/order/6")
@@ -38,7 +38,7 @@ it("gets the buyer id from params,fetches the order and returns status code 200 
     });
 });
 
-it("gets the owner id from param,fetches the profile ", function(done) {
+it("fetches the profile ", function(done) {
   chai
     .request("http://127.0.0.1:3001")
     .get("/owner/profile/6")
@@ -49,7 +49,7 @@ it("gets the owner id from param,fetches the profile ", function(done) {
     });
 });
 
-it("gets the buyer id from the url,updates the profile", function(done) {
+it("updates the profile", function(done) {
   chai
     .request("http://127.0.0.1:3001")
     .post("/buyer/profileUpdate/21")
