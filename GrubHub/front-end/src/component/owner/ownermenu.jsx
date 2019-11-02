@@ -15,16 +15,15 @@ class OwnerMenu extends Component {
       description: ""
     },
     updateSection: {
-      section_id: "",
-      section_name: "",
-      description: "",
-      prevSectionName: ""
+      sectionId: "",
+      sectionName: "",
+      description: ""
     },
     showAddSection: false,
     showUpdateModal: false
   };
   componentWillMount() {
-    let restId = cookie.load("Owner");
+    let restId = localStorage.getItem("id");
     Axios.get(`${util.base_url}/menu/section/${restId}`).then(response => {
       console.log(response.data);
       this.setState({ section: response.data, restId: restId });
@@ -35,35 +34,37 @@ class OwnerMenu extends Component {
     let data = {
       restId: this.state.restId,
       sectionName: this.state.addsection.sectionName,
-      description: this.state.addsection.description,
-      errorMessage: "",
-      url: ""
+      description: this.state.addsection.description
     };
     // console.log(data);
 
-    Axios.post(`${util.base_url}/menu/addSection`, data).then(response => {
-      console.log(response.data);
-      if (response.data === 200) {
-        Axios.get(`${util.base_url}/menu/section/${data.restId}`).then(
-          response => {
-            console.log(response.data);
-            let addsection = {
-              sectionName: "",
-              description: ""
-            };
-            this.setState({
-              section: response.data,
-              showAddSection: false,
-              errorMessage: 200,
-              addsection: addsection
-            });
-          }
-        );
-      }
-      if (response.data === 400) {
-        this.setState({ errorMessage: 400 });
-      } else this.setState({ errorMessage: 500 });
-    });
+    Axios.post(`${util.base_url}/menu/addSection`, data)
+      .then(response => {
+        console.log(response.data);
+        let addsection = {
+          sectionName: "",
+          description: ""
+        };
+        this.setState({
+          section: response.data,
+          showAddSection: false,
+          errorMessage: 200,
+          addsection: addsection
+        });
+      })
+      .catch(err => {
+        if (err.response.data === 400) {
+          let addsection = {
+            sectionName: "",
+            description: ""
+          };
+          this.setState({
+            errorMessage: 400,
+            showAddSection: false,
+            addsection: addsection
+          });
+        } else this.setState({ errorMessage: 500 });
+      });
   };
   handleChange = ({ currentTarget: input }) => {
     const addsection = { ...this.state.addsection };
@@ -76,25 +77,19 @@ class OwnerMenu extends Component {
   };
   handleDelete = e => {
     let data = {
-      sectionName: e.currentTarget.name,
+      sectionId: e.currentTarget.name,
       restId: this.state.restId
     };
     console.log(data);
-    Axios.post(`${util.base_url}/menu/deleteSection`, data).then(response => {
-      console.log(response.data);
-      if (response.data === 200) {
-        Axios.get(`${util.base_url}/menu/section/${data.restId}`).then(
-          response => {
-            console.log(response.data);
-            this.setState({
-              section: response.data,
-              showAddSection: false,
-              errorMessage: 200
-            });
-          }
-        );
-      } else this.setState({ errorMessage: 500 });
-    });
+    Axios.post(`${util.base_url}/menu/deleteSection`, data)
+      .then(response => {
+        this.setState({
+          section: response.data,
+          showAddSection: false,
+          errorMessage: 200
+        });
+      })
+      .catch(() => this.setState({ errorMessage: 500 }));
   };
   redirectToItem = e => {
     const url = "/itemList/" + e.currentTarget.name;
@@ -102,9 +97,8 @@ class OwnerMenu extends Component {
   };
   handleUpdateModal = section => {
     let updateSection = {
-      section_id: section.section_id,
-      section_name: section.section_name,
-      prevSectionName: section.section_name,
+      sectionId: section._id,
+      sectionName: section.sectionName,
       description: section.description
     };
     let showUpdateModal = !this.state.showUpdateModal;
@@ -125,30 +119,23 @@ class OwnerMenu extends Component {
     e.preventDefault();
     let data = {
       restId: this.state.restId,
-      section_name: this.state.updateSection.section_name,
-      prevSectionName: this.state.updateSection.prevSectionName,
-      section_id: this.state.updateSection.section_id
+      sectionName: this.state.updateSection.sectionName,
+      description: this.state.updateSection.description,
+      sectionId: this.state.updateSection.sectionId
     };
     console.log(data);
-    Axios.post(`${util.base_url}/menu/editSection`, data).then(response => {
-      console.log(response.data);
-      if (response.data === 200) {
-        Axios.get(`${util.base_url}/menu/section/${data.restId}`).then(
-          response => {
-            console.log(response.data);
-            this.setState({
-              section: response.data,
-              showUpdateModal: false,
-              errorMessage: 200
-            });
-          }
-        );
-      } else this.setState({ errorMessage: 500 });
-    });
+    Axios.post(`${util.base_url}/menu/editSection`, data)
+      .then(response => {
+        this.setState({
+          section: response.data,
+          showUpdateModal: false,
+          errorMessage: 200
+        });
+      })
+      .catch(() => this.setState({ errorMessage: 500 }));
   };
   render() {
-    console.log("sections");
-    console.log(this.state.updateSection);
+    console.log(this.state.section);
     let errorBlock,
       sectionCard,
       redirectVar,
@@ -220,13 +207,13 @@ class OwnerMenu extends Component {
       sectionCard = this.state.section.map(data => (
         <div class="card col-sm-3">
           <div className="card-body m-1">
-            <h2 className="text-center">{data.section_name}</h2>
+            <h2 className="text-center">{data.sectionName}</h2>
             <p className="text-center">{data.description}</p>
             <div className="row justify-content-sm-center">
               <button
                 type="button"
                 onClick={this.handleDelete}
-                name={data.section_name}
+                name={data._id}
                 className="btn btn-danger"
               >
                 delete
@@ -238,7 +225,7 @@ class OwnerMenu extends Component {
                 Update
               </button>
               <button
-                name={data.section_name}
+                name={data._id}
                 onClick={this.redirectToItem}
                 className="btn btn-primary ml-2"
               >
@@ -262,16 +249,16 @@ class OwnerMenu extends Component {
           </div>
           <Modal show={this.state.showUpdateModal} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>{this.state.updateSection.section_name}</Modal.Title>
+              <Modal.Title>{this.state.updateSection.sectionName}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <form onSubmit={this.handleSectionUpdate}>
-                <label htmlFor="section_name">Section Name</label>
+                <label htmlFor="sectionName">Section Name</label>
                 <input
                   type="text"
-                  value={this.state.updateSection.section_name}
+                  value={this.state.updateSection.sectionName}
                   onChange={this.handleUpdateChanges}
-                  name="section_name"
+                  name="sectionName"
                 />
                 <label htmlFor="description">Description</label>
                 <input

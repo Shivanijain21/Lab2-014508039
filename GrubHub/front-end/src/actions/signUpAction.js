@@ -18,7 +18,7 @@ export const createProfile = data => dispatch => {
     .catch(error =>
       dispatch({
         type: CREATE_PROFILE,
-        payload: error
+        payload: error.response.data
       })
     );
 };

@@ -1,124 +1,117 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../utility");
+const Owner = require("../models/owner");
+const Buyer = require("../models/buyer");
+const { Order } = require("../models/order");
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   id = req.params.id;
-  fetchQuery = `SELECT Owner.restuarant_name, orderId, OrderStatus,orderDescription, totalPrice from grubHubDb.Order inner join Owner on grubHubDb.Order.restID = Owner.rest_id  where buyerID='${id}';`;
-  pool.query(fetchQuery, (err, result) => {
-    if (!err) {
-      let orders = {
-        pastOrders: [],
-        upComingOrders: []
-      };
-      result.forEach(function(e) {
-        console.log(e);
-        if (e.OrderStatus === "Delivered" || e.OrderStatus === "Cancelled") {
-          orders.pastOrders.push(e);
-        } else {
-          orders.upComingOrders.push(e);
+  const buyer = await Buyer.findById(id);
+  const orders = buyer.orders;
+  if (orders) {
+    res.status(200).send(JSON.stringify(orders));
+  } else res.status(500).send("500");
+});
+
+router.post("/placeOrder", async (req, res) => {
+  let data = req.body;
+  try {
+    const buyer = await Buyer.findById(data.buyerId);
+    const owner = await Owner.findById(data.restId);
+    let order = new Order(
+      Object.assign(
+        {},
+        {
+          totalPrice: data.totalPrice,
+          orderDescription: data.totalOrder,
+          orderStatus: "New",
+          buyerId: data.buyerId,
+          buyerName: `${buyer.firstName} ${buyer.lastName}`,
+          buyerAddress: buyer.buyerAdd ? buyer.buyerAdd : "default",
+          restuarantName: owner.restuarantName,
+          restId: data.restId
         }
-      });
-      // console.log(orders);
-      res.writeHead(200, {
-        "Content-Type": "application/JSON"
-      });
-      res.end(JSON.stringify(orders));
-    } else console.log(err);
-  });
+      )
+    );
+    const buyerOrder = buyer.orders.upcomingOrders;
+    await buyerOrder.push(order);
+    await buyer.save(function(err, res) {
+      if (err) {
+        res.status(500).send("500");
+      }
+    });
+    const ownerOrder = owner.orders.upcomingOrders;
+    await ownerOrder.push(order);
+    await owner.save(function(err, res) {
+      if (err) {
+        res.status(500).send("500");
+      }
+    });
+    return res.status(200).send("200");
+  } catch {
+    err => {
+      console.log(err);
+      return res.status(500).send("500");
+    };
+  }
+});
+router.get("/rest/:id", async (req, res) => {
+  id = req.params.id;
+  const restuarant = await Owner.findById(id);
+  const orders = restuarant.orders;
+  if (orders) {
+    res.status(200).send(JSON.stringify(orders));
+  } else res.status(500).send("500");
 });
 
-router.post("/placeOrder", (req, res) => {
+router.post("/rest/changeStatus", async (req, res) => {
   data = req.body;
-  insertQuery = `Insert into grubHubDb.Order (BuyerID,restID,orderDescription,totalPrice) Values('${data.buyerId}','${data.restId}','${data.totalOrder}','${data.totalPrice}');`;
-  console.log(insertQuery);
-  pool.query(insertQuery, (err, result) => {
-    if (!err) {
-      console.log("Inside order js ");
-      res.writeHead(200, {
-        "Content-Type": "plain/text"
-      });
-      console.log("inserted");
-      res.end("200");
-    } else {
-      console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
-});
-
-router.get("/rest/ongoing/:id", (req, res) => {
-  id = req.params.id;
-  selectQuery = `Select orderId, orderStatus, orderDescription, totalPrice,Buyer.name, Buyer.address from grubHubDb.Order Inner join Buyer On grubHubDb.Order.BuyerID = Buyer.buyer_id where grubHubDb.Order.restID = "${id}" and grubHubDb.Order.orderStatus in ('New', 'Preparing', 'Delivering');`;
-  console.log(selectQuery);
-  pool.query(selectQuery, (err, result) => {
-    if (!err) {
-      console.log("Inside order js ");
-      res.writeHead(200, {
-        "Content-Type": "application/Json"
-      });
-      res.end(JSON.stringify(result));
-    } else {
-      console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
-});
-router.get("/rest/complete/:id", (req, res) => {
-  id = req.params.id;
-  selectQuery = `Select orderId, orderStatus, orderDescription, totalPrice,Buyer.name, Buyer.address from grubHubDb.Order Inner join Buyer On grubHubDb.Order.BuyerID = Buyer.buyer_id where grubHubDb.Order.restID = "${id}" and grubHubDb.Order.orderStatus in ('Delivered', 'Cancelled');`;
-  console.log(selectQuery);
-  pool.query(selectQuery, (err, result) => {
-    if (!err) {
-      console.log("Inside order js ");
-      res.writeHead(200, {
-        "Content-Type": "application/Json"
-      });
-      res.end(JSON.stringify(result));
-    } else {
-      console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
-});
-router.post("/rest/changeStatus", (req, res) => {
-  data = req.body;
-  UpdateQuery = `Update grubHubDb.Order Set orderStatus="${data.orderStatus}" where grubHubDb.Order.orderId = "${data.orderId}";`;
-  console.log(UpdateQuery);
-  pool.query(UpdateQuery, (err, result) => {
-    if (!err) {
-      selectQuery = `Select orderId, orderStatus, orderDescription, totalPrice,Buyer.name, Buyer.address from grubHubDb.Order Inner join Buyer On grubHubDb.Order.BuyerID = Buyer.buyer_id where grubHubDb.Order.restID = "${data.rest_id}" and grubHubDb.Order.orderStatus in ('New', 'Preparing', 'Delivering');`;
-      console.log(selectQuery);
-      pool.query(selectQuery, (err, result) => {
-        if (!err) {
-          console.log("Inside order js ");
-          res.writeHead(200, {
-            "Content-Type": "application/Json"
-          });
-          res.end(JSON.stringify(result));
-        } else {
-          console.log(err);
-          res.writeHead(500, {
-            "Content-Type": "plain/text"
-          });
-          res.end("500");
-        }
-      });
-    } else {
-      res.writeHead(500, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
+  let restuarant = await Owner.findById(data.rest_id);
+  let upcomingorders = restuarant.orders.upcomingOrders;
+  console.log(upcomingorders);
+  let pastorders = restuarant.orders.pastOrders;
+  let order = await upcomingorders.id(data.orderId);
+  console.log(order.buyerId);
+  let buyer = await Buyer.findById(order.buyerId);
+  let buyerPastorders = buyer.orders.pastOrders;
+  let buyerupcomingorders = buyer.orders.upcomingOrders;
+  let buyerOrder = await buyerupcomingorders.id(data.orderId);
+  console.log(buyerOrder);
+  order.orderStatus = data.orderStatus;
+  buyerOrder.orderStatus = data.orderStatus;
+  if (data.orderStatus == "Cancelled" || data.orderStatus == "Delivered") {
+    await pastorders.push(order);
+    await order.remove();
+    await buyerPastorders.push(order);
+    await buyerOrder.remove();
+    await restuarant.save(function(err, updatedObj) {
+      if (err) {
+        return res.status(500).send("500");
+      } else {
+        buyer.save(function(err, check) {
+          if (!err) {
+            return res.status(200).send(JSON.stringify(updatedObj.orders));
+          } else {
+            return res.status(500).send("500");
+          }
+        });
+      }
+    });
+  } else {
+    await restuarant.save(function(err, updatedObj) {
+      if (err) {
+        return res.status(500).send("500");
+      } else {
+        console.log(updatedObj.orders);
+        buyer.save(function(err, check) {
+          if (check) {
+            return res.status(200).send(JSON.stringify(updatedObj.orders));
+          } else {
+            return res.status(500).send("500");
+          }
+        });
+      }
+    });
+  }
 });
 module.exports = router;

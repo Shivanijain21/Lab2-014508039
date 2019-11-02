@@ -1,256 +1,183 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../utility");
+const { Section } = require("../models/section");
+const Owner = require("../models/owner");
+const { Item } = require("../models/item");
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   data = req.body;
-  fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}'`;
-  pool.query(fetchQuery, (err, result) => {
-    if (!err) {
-      console.log("fetch item");
-      res.writeHead(200, {
-        "Content-Type": "application/JSON"
-      });
-      res.end(JSON.stringify(result));
-    } else console.log(err);
-  });
-});
-router.get("/:id", (req, res) => {
-  id = req.params.id;
-  fetchQuery = `SELECT * from Item where restId='${id}'`;
-  pool.query(fetchQuery, (err, result) => {
-    if (!err) {
-      console.log("fetch item");
-      let sections = {};
-      result.forEach(function(e) {
-        if (sections.hasOwnProperty(e.section)) {
-          sections[e.section].push(e);
-        } else {
-          sections[e.section] = [];
-          sections[e.section].push(e);
-        }
-      });
-      console.log(sections);
-      res.writeHead(200, {
-        "Content-Type": "application/JSON"
-      });
-      res.end(JSON.stringify(sections));
-    } else console.log(err);
-  });
+  const restuarant = await Owner.findById(data.restId);
+  const section = await restuarant.sections.id(data.sectionId);
+  return res.status(200).send(JSON.stringify(section.items));
 });
 
-router.get("/section/:id", (req, res) => {
+router.get("/section/:id", async (req, res) => {
   id = req.params.id;
-  fetchQuery = `SELECT * from Section where restId='${id}'`;
-  pool.query(fetchQuery, (err, result) => {
-    if (!err) {
-      console.log("Inside fetch section");
-      res.writeHead(200, {
-        "Content-Type": "application/JSON"
-      });
-      res.end(JSON.stringify(result));
-    } else console.log(err);
-  });
+  const sections = await Owner.findById(id, "sections");
+  if (sections) {
+    console.log(sections["sections"]);
+    return res.status(200).send(JSON.stringify(sections["sections"]));
+  } else res.status(500).send("500");
 });
 
-router.post("/addSection", (req, res) => {
-  data = req.body;
-  checkQuery = `Select * from Section where section_name = "${data.sectionName}" and restId="${data.restId}";`;
-  console.log(checkQuery);
-  pool.query(checkQuery, (err, result) => {
-    if (!err) {
-      console.log("in check");
-      console.log(result);
-      if (result.length === 0) {
-        console.log("in if condition");
-        insertQuery = `Insert INTO Section (section_name,restId, description) values("${data.sectionName}", "${data.restId}", "${data.description}");`;
-        pool.query(insertQuery, (err, result) => {
-          if (!err) {
-            console.log("Inside add a section");
-            res.writeHead(200, {
-              "Content-Type": "plain/text"
-            });
-            res.end("200");
-          } else {
-            console.log(err);
-            res.writeHead(200, {
-              "Content-Type": "plain/text"
-            });
-            res.end("500");
-          }
-        });
-      } else {
-        console.log("in else");
-        res.writeHead(200, {
-          "Content-Type": "plain/text"
-        });
-        res.end("400");
+router.get("/:id", async (req, res) => {
+  id = req.params.id;
+  // fetchQuery = `SELECT * from Item where restId='${id}'`;
+  // pool.query(fetchQuery, (err, result) => {
+  //   if (!err) {
+  //     console.log("fetch item");
+  //     let sections = {};
+  //     result.forEach(function(e) {
+  //       if (sections.hasOwnProperty(e.section)) {
+  //         sections[e.section].push(e);
+  //       } else {
+  //         sections[e.section] = [];
+  //         sections[e.section].push(e);
+  //       }
+  //     });
+  //     console.log(sections);
+  //     res.writeHead(200, {
+  //       "Content-Type": "application/JSON"
+  //     });
+  //     res.end(JSON.stringify(sections));
+  //   } else console.log(err);
+  let restaurant = await Owner.findById(id);
+  let sections = restaurant.sections;
+  return res.status(200).send(sections);
+});
+
+router.post("/addSection", async (req, res) => {
+  let id = req.body.restId;
+  console.log(id);
+  let newSection = Object.assign(
+    {},
+    { sectionName: req.body.sectionName, description: req.body.description }
+  );
+  console.log(newSection);
+  let section = new Section(newSection);
+  let restuarant = await Owner.findById(id);
+  let sections = restuarant.sections;
+  if (
+    sections &&
+    sections.filter(data => data.sectionName === newSection.sectionName)
+      .length > 0
+  ) {
+    return res.status(400).send("400");
+  } else {
+    sections.push(section);
+    restuarant.save(function(err, updatedRestuarant) {
+      if (err) {
+        return res.status(500).send("500");
       }
-    } else {
-      console.log(err);
-      res.writeHead(200, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
+      const section = updatedRestuarant.sections;
+      return res.status(200).send(JSON.stringify(section));
+    });
+  }
 });
 
-router.post("/deleteSection", (req, res) => {
+router.post("/deleteSection", async (req, res) => {
   data = req.body;
   console.log(data);
-  deleteItemsQuery = `delete from Item where section="${data.sectionName}" and restId = "${data.restId}";`;
-  pool.query(deleteItemsQuery, (err, result) => {
-    if (!err) {
-      console.log("Inside delete an item");
-      deleteSectionQuery = `delete from Section where section_name="${data.sectionName}" and restId="${data.restId}";`;
-      pool.query(deleteSectionQuery, (err, result) => {
-        if (!err) {
-          console.log("Inside delete a section");
-          res.writeHead(200, {
-            "Content-Type": "plain/text"
-          });
-          res.end("200");
-        } else {
-          console.log(err);
-          res.writeHead(200, {
-            "Content-Type": "plain/text"
-          });
-          res.end("500");
-        }
+  user = await Owner.findById(data.restId);
+  section = await user.sections.id(data.sectionId);
+  console.log(section);
+  try {
+    if (section) {
+      section.remove();
+      user.save(function(err, updatedUser) {
+        return res.status(200).send(JSON.stringify(updatedUser.sections));
       });
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
+    } else return res.status(500).send("500");
+  } catch {
+    () => {
+      return res.status(500).send("500");
+    };
+  }
 });
 
-router.post("/editSection", (req, res) => {
+router.post("/editSection", async (req, res) => {
   data = req.body;
   console.log(data);
-  updateItemsQuery = `UPDATE Item SET section='${data.section_name}' where restId = "${data.restId}" and section="${data.prevSectionName}";`;
-  pool.query(updateItemsQuery, (err, result) => {
-    if (!err) {
-      console.log("Update a section");
-      updateSectionQuery = `update Section SET section_name="${data.section_name}" where section_id="${data.section_id}";`;
-      pool.query(updateSectionQuery, (err, result) => {
-        if (!err) {
-          console.log("Inside delete a section");
-          res.writeHead(200, {
-            "Content-Type": "plain/text"
-          });
-          res.end("200");
-        } else {
-          console.log(err);
-          res.writeHead(200, {
-            "Content-Type": "plain/text"
-          });
-          res.end("500");
-        }
-      });
-    } else {
-      res.writeHead(200, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
+  const restaurant = await Owner.findById(data.restId);
+  const sections = await restaurant.sections.id(data.sectionId);
+  if (sections) {
+    sections.sectionName = data.sectionName;
+    sections.description = data.description;
+    restaurant.save(function(err, updatedRestuarant) {
+      if (err) {
+        return res.status(500).send("500");
+      }
+      // const section = updatedRestuarant.sections.id(data.sectionId);
+      return res.status(200).send(JSON.stringify(updatedRestuarant.sections));
+    });
+  } else return res.status(500).send("500");
 });
 
-router.post("/addItem", (req, res) => {
+router.post("/addItem", async (req, res) => {
+  console.log(" i a here");
   data = req.body;
-  insertquery = `INSERT INTO Item (restId,price,section,item_name,description) VALUES ('${data.restId}','${data.price}','${data.sectionName}','${data.itemName}','${data.description}');`;
-  pool.query(insertquery, (err, result) => {
-    if (!err) {
-      console.log("Inside add an item");
-      fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}';`;
-      pool.query(fetchQuery, (err, result) => {
-        if (!err) {
-          console.log("Inside fetch an item");
-          res.writeHead(200, {
-            "Content-Type": "application/JSON"
-          });
-          res.end(JSON.stringify(result));
-        } else {
-          res.writeHead(500, {
-            "Content-Type": "plain/text"
-          });
-          res.end("500");
-        }
+  console.log(data);
+  let item = new Item(
+    Object.assign(
+      {},
+      {
+        price: data.price,
+        itemName: data.itemName,
+        description: data.description
+      }
+    )
+  );
+  const restuarant = await Owner.findById(data.restId);
+  if (restuarant) {
+    const section = await restuarant.sections.id(data.sectionId);
+    if (section) {
+      section.items.push(item);
+      restuarant.save(function(err, updatedRestuarant) {
+        const section = updatedRestuarant.sections.id(data.sectionId);
+        return res.status(200).send(JSON.stringify(section.items));
       });
-    } else {
-      console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
+    } else return res.status(500).send("500");
+  } else return res.status(500).send("500");
 });
 
-router.post("/editItem", (req, res) => {
+router.post("/editItem", async (req, res) => {
   data = req.body;
-  updatequery = `UPDATE Item SET price ='${data.price}',section='${data.sectionName}',item_name='${data.itemName}',description='${data.description}' where item_id = "${data.itemId}";`;
-  pool.query(updatequery, (err, result) => {
-    if (!err) {
-      fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}';`;
-      pool.query(fetchQuery, (err, result) => {
-        if (!err) {
-          res.writeHead(200, {
-            "Content-Type": "application/JSON"
-          });
-          res.end(JSON.stringify(result));
-        } else {
-          console.log(err);
-          res.writeHead(500, {
-            "Content-Type": "plain/text"
-          });
-          res.end("500");
-        }
+  console.log(data);
+  const restuarant = await Owner.findById(data.restId);
+  if (restuarant) {
+    const section = await restuarant.sections.id(data.sectionId);
+    if (section) {
+      const item = await section.items.id(data.itemId);
+      console.log(item);
+      item.itemName = data.itemName;
+      item.price = data.price;
+      item.description = data.description;
+      restuarant.save(function(err, updatedRestuarant) {
+        const section = updatedRestuarant.sections.id(data.sectionId);
+        return res.status(200).send(JSON.stringify(section.items));
       });
-    } else {
-      console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "plain/text"
-      });
-      res.end("500");
-    }
-  });
+    } else return res.status(500).send("500");
+  } else return res.status(500).send("500");
 });
 
-router.post("/deleteItem", (req, res) => {
+router.post("/deleteItem", async (req, res) => {
   data = req.body;
-  deletequery = `delete from Item where item_id="${data.itemId}" and restId="${data.restId}";`;
-  pool.query(deletequery, (err, result) => {
-    if (!err) {
-      console.log("Inside delete an item");
-      fetchQuery = `SELECT * from Item where restId='${data.restId}' and section='${data.sectionName}'`;
-      pool.query(fetchQuery, (err, result) => {
-        if (!err) {
-          console.log("fetch item");
-          res.writeHead(200, {
-            "Content-Type": "application/JSON"
-          });
-          res.end(JSON.stringify(result));
-        } else {
-          console.log(err);
-          res.writeHead(500, {
-            "Content-Type": "application/JSON"
-          });
-          res.end("500");
-        }
-      });
-    } else {
-      console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "application/JSON"
-      });
-      res.end("500");
-    }
-  });
+  console.log(" i am in delete item");
+  const restaurant = await Owner.findById(data.restId);
+  const sections = restaurant.sections;
+  if (sections) {
+    const section = await restaurant.sections.id(data.sectionId);
+    const item = await section.items.id(data.itemId);
+    console.log(item);
+    item.remove();
+    console.log(restaurant);
+    restaurant.save(function(err, updatedRestuarant) {
+      const section = updatedRestuarant.sections.id(data.sectionId);
+      return res.status(200).send(JSON.stringify(section.items));
+    });
+  } else {
+    return res.status(500).send("500");
+  }
 });
 
 module.exports = router;

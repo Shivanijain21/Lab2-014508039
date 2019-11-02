@@ -12,7 +12,7 @@ import util from "../utils";
 class Restuarant extends Component {
   state = {
     restuarant: {
-      rest_id: "",
+      _id: "",
       restuarant_name: "",
       restuarant_add: "",
       cuisine: "",
@@ -21,16 +21,15 @@ class Restuarant extends Component {
   };
 
   componentWillMount() {
-    let rest_id = this.props.match.params.id;
+    let _id = this.props.match.params.id;
     let restuarant = { ...this.state.restuarant };
-    Axios.get(`${util.base_url}/owner/profile/${rest_id}`)
+    Axios.get(`${util.base_url}/owner/profile/${_id}`)
       .then(response => {
         console.log("In profile");
-        restuarant.rest_id = rest_id;
-        restuarant.restuarant_name = response.data.restuarant_name;
-        restuarant.restuarant_add = response.data.restuarant_add;
+        restuarant._id = _id;
+        restuarant.restuarantName = response.data.restuarantName;
+        restuarant.restuarantAdd = response.data.restuarantAdd;
         restuarant.cuisine = response.data.cuisine;
-        restuarant.restuarant_dp = response.data.restuarant_dp;
         this.setState({ restuarant: restuarant });
       })
       .catch(err => console.log(err));
@@ -46,7 +45,7 @@ class Restuarant extends Component {
     if (!cookie.load("Buyer")) {
       redirectVar = <Redirect to="/login" />;
     }
-    const imageUrl = `${util.base_url}/profileImage/Rest${this.state.restuarant.rest_id}`;
+    const imageUrl = `${util.base_url}/profileImage/Rest${this.state.restuarant._id}`;
     return (
       <div class="container-fluid">
         {redirectVar}
@@ -60,10 +59,10 @@ class Restuarant extends Component {
           ></img>
         </div>
         <h3 className="col-sm-12 mt-3">
-          {this.state.restuarant.restuarant_name}
+          {this.state.restuarant.restuarantName}
         </h3>
         <div className="col-sm-12">
-          <p>{this.state.restuarant.restuarant_add}</p>
+          <p>{this.state.restuarant.restuarantAdd}</p>
         </div>
         <div className="col-sm-12">
           <p>Cuisine : {this.state.restuarant.cuisine}</p>
@@ -125,7 +124,7 @@ class Restuarant extends Component {
         <div className="container">
           <div id="menu">
             <h2>Menu</h2>
-            <Menu value={this.state.restuarant.rest_id} />
+            <Menu value={this.state.restuarant._id} />
           </div>
           <div id="about">
             <h2>about</h2>

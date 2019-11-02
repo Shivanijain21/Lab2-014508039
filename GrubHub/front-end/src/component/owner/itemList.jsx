@@ -9,7 +9,7 @@ import util from "../../utils";
 class ItemList extends Component {
   state = {
     restId: "",
-    sectionName: "",
+    sectionId: "",
     Items: [],
     showAddSectionForm: false,
     Item: {
@@ -28,11 +28,11 @@ class ItemList extends Component {
     file: null
   };
   componentWillMount() {
-    let restId = cookie.load("Owner");
-    let sectionName = this.props.match.params.section;
+    let restId = localStorage.getItem("id");
+    let sectionId = this.props.match.params.section;
     let data = {
       restId: restId,
-      sectionName: sectionName
+      sectionId: sectionId
     };
     let Items = [];
     Axios.post(`${util.base_url}/menu`, data).then(response => {
@@ -43,7 +43,7 @@ class ItemList extends Component {
       console.log(Items);
       this.setState({
         restId: restId,
-        sectionName: sectionName,
+        sectionId: sectionId,
         Items: Items,
         showAddSectionForm: false
       });
@@ -59,8 +59,9 @@ class ItemList extends Component {
       price: this.state.Item.price,
       description: this.state.Item.description,
       restId: this.state.restId,
-      sectionName: this.state.sectionName
+      sectionId: this.state.sectionId
     };
+    console.log(data);
     let Items = [];
     Axios.post(`${util.base_url}/menu/addItem`, data)
       .then(response => {
@@ -96,7 +97,7 @@ class ItemList extends Component {
     let data = {
       restId: this.state.restId,
       itemId: input.name,
-      sectionName: this.state.sectionName
+      sectionId: this.state.sectionId
     };
     console.log(data);
     let Items = [];
@@ -113,10 +114,10 @@ class ItemList extends Component {
   };
   showUpdateModal = ({ item }) => {
     let ItemUpdate = {
-      itemName: item.item_name,
+      itemName: item.itemName,
       price: item.price,
       description: item.description,
-      itemId: item.item_id
+      itemId: item._id
     };
     let showItemModal = !this.state.showItemModal;
     this.setState({ ItemUpdate: ItemUpdate, showItemModal: showItemModal });
@@ -133,7 +134,7 @@ class ItemList extends Component {
   itemUpdate = e => {
     e.preventDefault();
     let data = { ...this.state.ItemUpdate };
-    data.sectionName = this.state.sectionName;
+    data.sectionId = this.state.sectionId;
     data.restId = this.state.restId;
     let Items = [];
     Axios.post(`${util.base_url}/menu/editItem`, data)
@@ -202,12 +203,12 @@ class ItemList extends Component {
               style={{ height: "60px" }}
               className="col-sm-1"
             />
-            <div className="col-sm-3 my-auto">{item.item_name}</div>
+            <div className="col-sm-3 my-auto">{item.itemName}</div>
             <div className="col-sm-1 my-auto">{item.price}</div>
             <div className="col-sm-3 my-auto">{item.description}</div>
             <button
               className="btn btn-danger col-sm-1"
-              name={item.item_id}
+              name={item._id}
               onClick={this.handleDelete}
             >
               -
@@ -281,7 +282,7 @@ class ItemList extends Component {
         {redirectVar}
         <Navbar />
         <div class="container">
-          <h2 className="my-5"> List of Item in {this.sectionName} section</h2>
+          <h2 className="my-5"> List of Item</h2>
           {errorBlock}
           <div class="row card-deck">
             {ItemList}
@@ -289,7 +290,7 @@ class ItemList extends Component {
           </div>
           <Modal show={this.state.showItemModal} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>{this.state.ItemUpdate.item_name}</Modal.Title>
+              <Modal.Title>{this.state.ItemUpdate.itemName}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <form onSubmit={e => this.handleUpload(e, this.state.ItemUpdate)}>

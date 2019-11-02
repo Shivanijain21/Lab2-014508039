@@ -8,7 +8,10 @@ export const fetchcred = data => dispatch => {
   axios.defaults.withCredentials = true;
   axios
     .post(`${util.base_url}/login`, data)
-    .then(response => response.data)
+    .then(response => {
+      console.log(response);
+      return response.data;
+    })
     .then(auth =>
       dispatch({
         type: FETCH_CRED,
@@ -18,7 +21,7 @@ export const fetchcred = data => dispatch => {
     .catch(error =>
       dispatch({
         type: FETCH_CRED,
-        payload: error
+        payload: error.response.data
       })
     );
 };

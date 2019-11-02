@@ -1,82 +1,64 @@
 import React, { Component } from "react";
 import cookie from "react-cookies";
 import Axios from "axios";
-import Navbar from "../navbar";
-import { Modal, Button } from "react-bootstrap";
-import { resolve } from "dns";
 import util from "../../utils";
+import Draggable from "react-draggable";
+import Chat from "../chat";
 
 class OwnerHome extends Component {
   state = {
-    onGoingOrders: [],
-    completedOrders: [],
-    rest_id: "",
-    pastOrders: []
+    orders: {
+      upcomingOrders: [],
+      pastOrders: []
+    },
+    rest_id: ""
   };
   componentWillMount() {
-    let rest_id = cookie.load("Owner");
-    Axios.get(`${util.base_url}/order/rest/ongoing/${rest_id}`).then(
-      response => {
-        console.log(response.data);
-        let onGoingOrders = response.data;
-        this.setState({ onGoingOrders: onGoingOrders, rest_id: rest_id });
-      }
-    );
-    Axios.get(`${util.base_url}/order/rest/complete/${rest_id}`).then(
-      response => {
-        console.log(response.data);
-        let completedOrders = response.data;
-        this.setState({ completedOrders: completedOrders });
-      }
-    );
+    let rest_id = localStorage.getItem("id");
+    Axios.get(`${util.base_url}/order/rest/${rest_id}`).then(response => {
+      console.log(response.data);
+      const orders = response.data;
+      this.setState({ orders: orders, rest_id: rest_id });
+    });
   }
   handleChange = (e, eachOrder) => {
-    let order = this.state.onGoingOrders;
+    let prevOrder = this.state.orders.upcomingOrders;
     let data = eachOrder;
     eachOrder.orderStatus = e.currentTarget.value;
-    order[order.indexOf(data)] = { ...eachOrder };
-    console.log(order);
-    this.setState({ order: order });
+    prevOrder[prevOrder.indexOf(data)] = { ...eachOrder };
+    let order = this.state.orders;
+    order.upcomingOrders = prevOrder;
+    this.setState({ orders: order });
     // this.setState({ order: eachOrder, showModal: true });
   };
   handleSubmit = (e, eachOrder) => {
     e.preventDefault();
     let data = {
       rest_id: this.state.rest_id,
-      orderId: eachOrder.orderId,
+      orderId: eachOrder._id,
       orderStatus: eachOrder.orderStatus
     };
     console.log(data);
     Axios.post(`${util.base_url}/order/rest/changeStatus`, data).then(
       response => {
-        console.log(response.data);
-        let onGoingOrders = response.data;
-        Axios.get(`${util.base_url}/order/rest/complete/${data.rest_id}`).then(
-          response => {
-            console.log(response.data);
-            let completedOrders = response.data;
-            this.setState({
-              completedOrders: completedOrders,
-              onGoingOrders: onGoingOrders
-            });
-          }
-        );
+        const orders = response.data;
+        this.setState({ orders: orders });
       }
     );
   };
 
   render() {
-    console.log(this.state.onGoingOrders);
-    console.log(this.state.completedOrders);
+    console.log(this.state.orders.upcomingOrders);
+    console.log(this.state.orders.pastOrders);
     let displayBlock,
       completedOrders = null;
-    if (this.state.onGoingOrders.length != 0) {
-      displayBlock = this.state.onGoingOrders.map(eachOrder => (
+    if (this.state.orders.upcomingOrders.length != 0) {
+      displayBlock = this.state.orders.upcomingOrders.map(eachOrder => (
         <div class="card col-sm-3">
           <div className="card-body m-1">
             <div>
               <h5>Buyer Name</h5>
-              <p>{eachOrder.name}</p>
+              <p>{eachOrder.buyerName}</p>
             </div>
             <div>
               <h5>Order Details</h5>
@@ -88,7 +70,7 @@ class OwnerHome extends Component {
             </div>
             <div>
               <h5>Delivery Address</h5>
-              <p>{eachOrder.address}</p>
+              <p>{eachOrder.buyerAddress}</p>
             </div>
             <div className="row justify-content-sm-center">
               <form onSubmit={e => this.handleSubmit(e, eachOrder)}>
@@ -108,6 +90,12 @@ class OwnerHome extends Component {
                 <input type="submit" value="Submit" />
               </form>
             </div>
+            <Chat
+              order={Object.assign(
+                {},
+                { id: this.state.rest_id, orderId: eachOrder._id }
+              )}
+            ></Chat>
           </div>
         </div>
       ));
@@ -118,35 +106,37 @@ class OwnerHome extends Component {
         </div>
       );
     }
-    if (this.state.completedOrders.length != 0) {
+    if (this.state.orders.pastOrders.length != 0) {
       completedOrders = (
         <div className="row mt-5">
           <h2 className="col-sm-12">Completed Orders</h2>
-          {this.state.completedOrders.map(eachOrder => (
-            <div className="card col-sm-3">
-              <div className="card-body">
-                <div>
-                  <h5>Buyer Name</h5>
-                  <p>{eachOrder.name}</p>
-                </div>
-                <div>
-                  <h5>Order Details</h5>
-                  <p>{eachOrder.orderDescription}</p>
-                </div>
-                <div>
-                  <h5>Total Price</h5>
-                  <p>{eachOrder.totalPrice}</p>
-                </div>
-                <div>
-                  <h5>Delivery Address</h5>
-                  <p>{eachOrder.address}</p>
-                </div>
-                <div>
-                  <h5>Order Status</h5>
-                  <p>{eachOrder.orderStatus}</p>
+          {this.state.orders.pastOrders.map(eachOrder => (
+            <Draggable>
+              <div className="card col-sm-3">
+                <div className="card-body">
+                  <div>
+                    <h5>Buyer Name</h5>
+                    <p>{eachOrder.name}</p>
+                  </div>
+                  <div>
+                    <h5>Order Details</h5>
+                    <p>{eachOrder.orderDescription}</p>
+                  </div>
+                  <div>
+                    <h5>Total Price</h5>
+                    <p>{eachOrder.totalPrice}</p>
+                  </div>
+                  <div>
+                    <h5>Delivery Address</h5>
+                    <p>{eachOrder.address}</p>
+                  </div>
+                  <div>
+                    <h5>Order Status</h5>
+                    <p>{eachOrder.orderStatus}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Draggable>
           ))}
         </div>
       );

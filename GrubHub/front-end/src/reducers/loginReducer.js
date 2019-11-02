@@ -1,7 +1,7 @@
 import { FETCH_CRED, LOGOUT } from "../actions/types";
 
 const initialState = {
-  auth: Number
+  auth: Object
 };
 export default function(state = initialState, action) {
   switch (action.type) {

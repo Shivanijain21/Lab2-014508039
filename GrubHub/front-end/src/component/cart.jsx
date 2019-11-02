@@ -31,6 +31,7 @@ class Cart extends Component {
       this.setState({
         cart: cart,
         restId: restId,
+        buyerId: localStorage.getItem("id"),
         totalOrder: totalOrder,
         totalPrice: totalPrice
       });
@@ -42,7 +43,7 @@ class Cart extends Component {
       restId: this.state.restId,
       totalPrice: this.state.totalPrice,
       totalOrder: this.state.totalOrder,
-      buyerId: cookie.load("Buyer")
+      buyerId: this.state.buyerId
     };
     console.log(data);
     Axios.post(`${util.base_url}/order/placeOrder`, data)

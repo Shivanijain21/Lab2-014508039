@@ -10,11 +10,11 @@ class Login extends Component {
   state = {
     username: "",
     password: "",
+    userProfile: "buyer",
     authFlag: ""
   };
   componentWillReceiveProps({ login }) {
-    console.log(login);
-    this.setState({ authFlag: login });
+    this.setState({ authFlag: login.data });
   }
   handleChange = e => {
     const user = this.state;
@@ -25,26 +25,35 @@ class Login extends Component {
     e.preventDefault();
     const data = {
       username: this.state.username,
-      password: this.state.password
+      password: this.state.password,
+      userProfile: this.state.userProfile
     };
 
     //set the with credentials to true
     this.props.fetchcred(data);
   };
   render() {
-    const login = this.state.authFlag;
+    const storedata = this.props.login;
+    console.log(storedata);
+    const authFlag = this.state.authFlag;
     console.log("state");
-    console.log(login);
+    console.log(authFlag);
     let redirectVar = null;
     let errorMessage = null;
     if (cookie.load("Buyer") || cookie.load("Owner")) {
       redirectVar = <Redirect to="/home" />;
     }
-    if (login === 400) {
+    if (authFlag === 200) {
+      console.log("i am here");
+      localStorage.setItem("id", storedata.id);
+      localStorage.setItem("jwt", storedata.token);
+      redirectVar = <Redirect to="/home" />;
+    }
+    if (authFlag === 400) {
       errorMessage = (
         <div className="alert alert-danger">Invalid Credentials</div>
       );
-    } else if (login === 500) {
+    } else if (authFlag === 500) {
       errorMessage = <div className="alert alert-danger">Bad request</div>;
     }
     return (
@@ -83,6 +92,15 @@ class Login extends Component {
                     />
                   </div>
                 </div>
+                <div className="row">
+                  <div className="form-group col-sm-12">
+                    <label htmlFor="userProfile">You are a:</label>
+                    <select name="userProfile" onChange={this.handleChange}>
+                      <option value="buyer">Buyer</option>
+                      <option value="owner">Owner</option>
+                    </select>
+                  </div>
+                </div>
                 <button className="btn btn-danger col-sm-12" type="submit">
                   Sign In
                 </button>
@@ -104,7 +122,7 @@ class Login extends Component {
 }
 Login.propTypes = {
   fetchcred: PropTypes.func.isRequired,
-  login: PropTypes.array.isRequired
+  login: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

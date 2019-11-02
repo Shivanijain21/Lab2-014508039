@@ -1,28 +1,31 @@
 import React, { Component } from "react";
-import { Form, Card, Accordion } from "react-bootstrap";
+import { Form, Card } from "react-bootstrap";
 import image from "../../Images/pizza.jpg";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import cookie from "react-cookies";
 import util from "../../utils";
+import Chat from "../chat";
 
 class BuyerHome extends Component {
   state = {
     searchString: null,
-    dataSet: [],
     orders: {
       pastOrders: [],
-      upComingOrders: []
-    }
+      upcomingOrders: []
+    },
+    buyerId: ""
   };
   componentWillMount() {
-    let buyer_id = cookie.load("Buyer");
-    console.log(util.base_url);
-    Axios.get(`${util.base_url}/order/${buyer_id}`).then(response => {
+    let _id = localStorage.getItem("id");
+    let token = localStorage.getItem("jwt");
+    Axios.get(`${util.base_url}/order/${_id}`, {
+      headers: { Authorization: token }
+    }).then(response => {
       // console.log(response.data);
       let Orders = response.data;
-      console.log(Orders);
-      this.setState({ orders: Orders });
+      // console.log(Orders);
+      this.setState({ orders: Orders, buyerId: _id });
     });
   }
   render() {
@@ -57,7 +60,7 @@ class BuyerHome extends Component {
           <div className="card-body">
             <div>
               <h5>Restuarant Name</h5>
-              <p>{order.restuarant_name}</p>
+              <p>{order.restuarantName}</p>
             </div>
             <div>
               <h5>Order Details</h5>
@@ -69,7 +72,7 @@ class BuyerHome extends Component {
             </div>
             <div>
               <h5>Order Status</h5>
-              <p>{order.OrderStatus}</p>
+              <p>{order.orderStatus}</p>
             </div>
           </div>
         </Card>
@@ -81,16 +84,16 @@ class BuyerHome extends Component {
         </Card>
       );
 
-    if (this.state.orders.upComingOrders.length != 0) {
+    if (this.state.orders.upcomingOrders.length != 0) {
       UpcomingOrder = (
         <div className="row my-5">
           <h2 className="col-sm-12">Upcoming Orders</h2>
-          {this.state.orders.upComingOrders.map(order => (
+          {this.state.orders.upcomingOrders.map(order => (
             <Card className="col-sm-4">
               <div className="card-body">
                 <div>
                   <h5>Restuarant Name</h5>
-                  <p>{order.restuarant_name}</p>
+                  <p>{order.restuarantName}</p>
                 </div>
                 <div>
                   <h5>Order Details</h5>
@@ -102,7 +105,15 @@ class BuyerHome extends Component {
                 </div>
                 <div>
                   <h5>Order Status</h5>
-                  <p>{order.OrderStatus}</p>
+                  <p>{order.orderStatus}</p>
+                </div>
+                <div>
+                  <Chat
+                    order={Object.assign(
+                      {},
+                      { id: this.state.buyerId, orderId: order._id }
+                    )}
+                  ></Chat>
                 </div>
               </div>
             </Card>
@@ -125,7 +136,7 @@ class BuyerHome extends Component {
                 type="text"
                 placeholder="food Item or Restuarant Name"
                 className="col-sm-4 mr-sm-2 form-control"
-                value={this.state.searchString}
+                // value={this.state.searchString}
                 onChange={this.handleChange}
                 name="searchString"
               />

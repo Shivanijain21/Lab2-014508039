@@ -60,7 +60,7 @@ class SearchResult extends Component {
         <div class="card-deck col-sm-9">
           {this.state.dataSet.map(data => (
             <div class="col-sm-12">
-              <RestuarantCards key={data.rest_id} restuarant={data} />
+              <RestuarantCards key={data._id} restuarant={data} />
             </div>
           ))}
         </div>
