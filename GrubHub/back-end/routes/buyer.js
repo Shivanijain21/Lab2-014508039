@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-// const pool = require("../utility");
 const kafka = require("../kafka/client");
 
 // buyer/profile

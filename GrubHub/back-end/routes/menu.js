@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { Section } = require("../models/section");
-const Owner = require("../models/owner");
-const { Item } = require("../models/item");
 const kafka = require("../kafka/client");
 
 // api to get all items for owner in item list

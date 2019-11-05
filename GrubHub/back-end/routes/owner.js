@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const Owner = require("../models/owner");
 const kafka = require("../kafka/client");
 
 // owner/profile
@@ -23,29 +22,6 @@ router.get("/profile/:id", function(req, res) {
     }
   );
 });
-
-// (req, res) => {
-//   console.log("in owner profile");
-//   id = req.params.id;
-//   Owner.findById(id, function(err, user) {
-//     if (user) {
-//       let onwerDetails = Object.assign(
-//         {},
-//         {
-//           email: user.email,
-//           firstName: user.firstName,
-//           lastName: user.lastName,
-//           restuarantName: user.restuarantName,
-//           cuisine: user.cuisine ? user.cuisine : "Indian",
-//           restuarantAdd: user.restuarantAdd ? user.restuarantAdd : "",
-//           Zip: user.Zip ? user.Zip : ""
-//         }
-//       );
-//       console.log("fetched owner profile:");
-//       return res.status(200).send(JSON.stringify(onwerDetails));
-//     } else return res.status(500).send("500");
-//   });
-// });
 
 //owner/profileUpdate
 router.post("/profileUpdate/:id", function(req, res) {
@@ -71,44 +47,5 @@ router.post("/profileUpdate/:id", function(req, res) {
     }
   );
 });
-
-// (req, res) => {
-//   data = req.body;
-//   id = req.params.id;
-//   console.log("In owner update profile" + data);
-//   Owner.findByIdAndUpdate(id, {
-//     $set: {
-//       firstName: data.firstName,
-//       lastName: data.lastName,
-//       restuarantName: data.restuarantName,
-//       cuisine: data.cuisine,
-//       restuarantAdd: data.restuarantAdd,
-//       Zip: data.Zip
-//     },
-//     returnNewDocument: true
-//   })
-//     .exec()
-//     .then(() => {
-//       Owner.findById(id, function(err, user) {
-//         if (user) {
-//           let onwerDetails = Object.assign(
-//             {},
-//             {
-//               email: user.email,
-//               firstName: user.firstName,
-//               lastName: user.lastName,
-//               restuarantName: user.restuarantName ? user.restuarantName : "",
-//               cuisine: user.cuisine ? user.cuisine : "Indian",
-//               restuarantAdd: user.restuarantAdd ? user.restuarantAdd : "",
-//               Zip: user.Zip ? user.Zip : ""
-//             }
-//           );
-//           console.log("fetched owner profile:");
-//           return res.status(200).send(JSON.stringify(onwerDetails));
-//         } else return res.status(500).send("500");
-//       });
-//     })
-//     .catch(() => res.status(500).send("500"));
-// });
 
 module.exports = router;
