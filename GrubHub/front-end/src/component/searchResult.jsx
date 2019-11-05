@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import RestuarantCards from "./RestuarantCards";
-import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import Navbar from "./navbar";
 import util from "../utils";
@@ -45,7 +44,7 @@ class SearchResult extends Component {
   };
   render() {
     let redirectVar = null;
-    if (!cookie.load("Buyer")) {
+    if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     }
     let restuarantList = null;

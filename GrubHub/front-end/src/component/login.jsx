@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import { fetchcred } from "../actions/loginAction";
 import PropTypes from "prop-types";
+import jwt_decode from "jwt-decode";
 
 class Login extends Component {
   state = {
@@ -34,19 +34,16 @@ class Login extends Component {
   };
   render() {
     const storedata = this.props.login;
-    console.log(storedata);
     const authFlag = this.state.authFlag;
     console.log("state");
     console.log(authFlag);
     let redirectVar = null;
     let errorMessage = null;
-    if (cookie.load("Buyer") || cookie.load("Owner")) {
-      redirectVar = <Redirect to="/home" />;
-    }
     if (authFlag === 200) {
-      console.log("i am here");
       localStorage.setItem("id", storedata.id);
       localStorage.setItem("jwt", storedata.token);
+      let decodeJwt = jwt_decode(storedata.token);
+      localStorage.setItem("userProfile", decodeJwt.userProfile);
       redirectVar = <Redirect to="/home" />;
     }
     if (authFlag === 400) {

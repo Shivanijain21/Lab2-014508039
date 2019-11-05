@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import cookie from "react-cookies";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Row, Col, Image } from "react-bootstrap";
@@ -11,9 +10,9 @@ class ImageUploader extends Component {
   state = {
     file: null,
     image: `${util.base_url}/profileImage/${
-      cookie.load("Buyer")
-        ? "Buyer" + cookie.load("Buyer")
-        : "Owner" + cookie.load("Owner")
+      localStorage.getItem("userProfile") == "buyer"
+        ? "Buyer" + localStorage.getItem("id")
+        : "Owner" + localStorage.getItem("id")
     }`
   };
   handleChange = e => {
@@ -32,9 +31,9 @@ class ImageUploader extends Component {
     };
 
     let param;
-    if (cookie.load("Buyer")) {
-      param = "Buyer" + cookie.load("Buyer");
-    } else param = "Owner" + cookie.load("Owner");
+    if (localStorage.getItem("userProfile") == "buyer") {
+      param = "Buyer" + localStorage.getItem("id");
+    } else param = "Owner" + localStorage.getItem("id");
     axios
       .post(`${util.base_url}/profileImage/upload/${param}`, formData, config)
       .then(response => {

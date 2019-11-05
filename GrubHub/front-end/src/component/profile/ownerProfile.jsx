@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { updateProfile, fetchProfile } from "../../actions/profileAction";
 import PropTypes from "prop-types";
 import { Image } from "react-bootstrap";
-import cookie from "react-cookies";
 import Axios from "axios";
 import util from "../../utils";
 
@@ -13,16 +12,16 @@ class OwnerProfile extends Component {
     owner: {
       email: "",
       password: "",
-      name: "",
-      restuarant_name: "",
+      firstName: "",
+      lastName: "",
+      restuarantName: "",
       cuisine: "",
-      restuarant_add: "",
-      restuarant_zip: ""
+      restuarantAdd: "",
+      Zip: ""
     },
     file: null,
     image: ""
   };
-
   componentWillMount() {
     this.props.fetchProfile();
   }
@@ -56,7 +55,7 @@ class OwnerProfile extends Component {
       }
     };
     let param;
-    param = "Rest" + cookie.load("Owner");
+    param = "Rest" + localStorage.getItem("id");
     Axios.post(
       `${util.base_url}/profileImage/upload/${param}`,
       formData,
@@ -104,14 +103,26 @@ class OwnerProfile extends Component {
         <form onSubmit={this.handleUpdate}>
           <div className="row">
             <div className="form-group col-sm-6">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">First Name</label>
               <input
                 type="text"
                 className="form-control"
-                name="name"
+                name="firstName"
                 id="name"
                 onChange={this.handleChange}
-                value={owner.name}
+                value={owner.firstName}
+                required
+              />
+            </div>
+            <div className="form-group col-sm-6">
+              <label htmlFor="name">Last Name</label>
+              <input
+                type="text"
+                className="form-control"
+                name="lastName"
+                id="name"
+                onChange={this.handleChange}
+                value={owner.lastName}
                 required
               />
             </div>
@@ -131,14 +142,14 @@ class OwnerProfile extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label htmlFor="restuarant_name">Restuarant Name</label>
+            <label htmlFor="restuarantName">Restuarant Name</label>
             <input
               type="text"
               className="form-control"
-              name="restuarant_name"
-              id="restuarant_name"
+              name="restuarantName"
+              id="restuarantName"
               onChange={this.handleChange}
-              value={owner.restuarant_name}
+              value={owner.restuarantName}
               required
             />
           </div>
@@ -159,25 +170,25 @@ class OwnerProfile extends Component {
             </select>
           </div>
           <div className="form-group">
-            <label htmlFor="restuarant_add">restuarant address</label>
+            <label htmlFor="restuarantAdd">restuarant address</label>
             <input
               type="text"
               className="form-control"
-              name="restuarant_add"
-              id="restuarant_add"
+              name="restuarantAdd"
+              id="restuarantAdd"
               onChange={this.handleChange}
-              value={owner.restuarant_add}
+              value={owner.restuarantAdd}
             />
           </div>
           <div className="form-group">
-            <label htmlFor="restuarant_zip">restuarant zip</label>
+            <label htmlFor="Zip">restuarant zip</label>
             <input
               type="text"
               className="form-control"
-              name="restuarant_zip"
-              id="restuarant_zip"
+              name="Zip"
+              id="Zip"
               onChange={this.handleChange}
-              value={owner.restuarant_zip}
+              value={owner.Zip}
             />
           </div>
           <div className="row justify-content-between mb-5">

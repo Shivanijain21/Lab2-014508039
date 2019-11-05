@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import cookie from "react-cookies";
 import Axios from "axios";
 import util from "../../utils";
 import Draggable from "react-draggable";
@@ -54,50 +53,52 @@ class OwnerHome extends Component {
       completedOrders = null;
     if (this.state.orders.upcomingOrders.length != 0) {
       displayBlock = this.state.orders.upcomingOrders.map(eachOrder => (
-        <div class="card col-sm-3">
-          <div className="card-body m-1">
-            <div>
-              <h5>Buyer Name</h5>
-              <p>{eachOrder.buyerName}</p>
+        <Draggable>
+          <div className="card col-sm-3">
+            <div className="card-body m-1">
+              <div>
+                <h5>Buyer Name</h5>
+                <p>{eachOrder.buyerName}</p>
+              </div>
+              <div>
+                <h5>Order Details</h5>
+                <p>{eachOrder.orderDescription}</p>
+              </div>
+              <div>
+                <h5>Total Price</h5>
+                <p>{eachOrder.totalPrice}</p>
+              </div>
+              <div>
+                <h5>Delivery Address</h5>
+                <p>{eachOrder.buyerAddress}</p>
+              </div>
+              <div className="row justify-content-sm-center">
+                <form onSubmit={e => this.handleSubmit(e, eachOrder)}>
+                  <label>
+                    <h2>Order Status:</h2>
+                    <select
+                      value={eachOrder.orderStatus}
+                      onChange={e => this.handleChange(e, eachOrder)}
+                    >
+                      <option value="New">New</option>
+                      <option value="Preparing">Preparing</option>
+                      <option value="Delivering">Delivering</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancel</option>
+                    </select>
+                  </label>
+                  <input type="submit" value="Submit" />
+                </form>
+              </div>
+              <Chat
+                order={Object.assign(
+                  {},
+                  { id: this.state.rest_id, orderId: eachOrder._id }
+                )}
+              ></Chat>
             </div>
-            <div>
-              <h5>Order Details</h5>
-              <p>{eachOrder.orderDescription}</p>
-            </div>
-            <div>
-              <h5>Total Price</h5>
-              <p>{eachOrder.totalPrice}</p>
-            </div>
-            <div>
-              <h5>Delivery Address</h5>
-              <p>{eachOrder.buyerAddress}</p>
-            </div>
-            <div className="row justify-content-sm-center">
-              <form onSubmit={e => this.handleSubmit(e, eachOrder)}>
-                <label>
-                  <h2>Order Status:</h2>
-                  <select
-                    value={eachOrder.orderStatus}
-                    onChange={e => this.handleChange(e, eachOrder)}
-                  >
-                    <option value="New">New</option>
-                    <option value="Preparing">Preparing</option>
-                    <option value="Delivering">Delivering</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancel</option>
-                  </select>
-                </label>
-                <input type="submit" value="Submit" />
-              </form>
-            </div>
-            <Chat
-              order={Object.assign(
-                {},
-                { id: this.state.rest_id, orderId: eachOrder._id }
-              )}
-            ></Chat>
           </div>
-        </div>
+        </Draggable>
       ));
     } else {
       displayBlock = (

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "./navbar";
 import Axios from "axios";
-import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import util from "../utils";
 
@@ -53,7 +52,7 @@ class Cart extends Component {
   render() {
     let displayBlock,
       redirectVar = null;
-    if (!cookie.load("Buyer")) {
+    if (localStorage.getItem("userProfile") != "buyer") {
       redirectVar = <Redirect to="/login" />;
     }
     if (this.state.cart == {}) {

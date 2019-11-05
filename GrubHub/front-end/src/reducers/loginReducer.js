@@ -7,7 +7,7 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case FETCH_CRED:
       console.log("In login");
-      console.log(action.payload);
+
       return {
         ...state,
         auth: action.payload

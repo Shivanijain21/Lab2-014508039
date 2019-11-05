@@ -1,117 +1,84 @@
 const express = require("express");
 const router = express.Router();
-const Owner = require("../models/owner");
-const Buyer = require("../models/buyer");
-const { Order } = require("../models/order");
+const kafka = require("../kafka/client");
 
-router.get("/:id", async (req, res) => {
-  id = req.params.id;
-  const buyer = await Buyer.findById(id);
-  const orders = buyer.orders;
-  if (orders) {
-    res.status(200).send(JSON.stringify(orders));
-  } else res.status(500).send("500");
-});
-
-router.post("/placeOrder", async (req, res) => {
-  let data = req.body;
-  try {
-    const buyer = await Buyer.findById(data.buyerId);
-    const owner = await Owner.findById(data.restId);
-    let order = new Order(
-      Object.assign(
-        {},
-        {
-          totalPrice: data.totalPrice,
-          orderDescription: data.totalOrder,
-          orderStatus: "New",
-          buyerId: data.buyerId,
-          buyerName: `${buyer.firstName} ${buyer.lastName}`,
-          buyerAddress: buyer.buyerAdd ? buyer.buyerAdd : "default",
-          restuarantName: owner.restuarantName,
-          restId: data.restId
-        }
-      )
-    );
-    const buyerOrder = buyer.orders.upcomingOrders;
-    await buyerOrder.push(order);
-    await buyer.save(function(err, res) {
+router.get("/:id", function(req, res) {
+  console.log("in backend: get buyer orders");
+  let id = req.params.id;
+  kafka.make_request(
+    "order_topic",
+    { path: "getBuyerOrder", content: id },
+    function(err, results) {
+      console.log("in kafka call back on back-end");
+      console.log(results);
       if (err) {
-        res.status(500).send("500");
-      }
-    });
-    const ownerOrder = owner.orders.upcomingOrders;
-    await ownerOrder.push(order);
-    await owner.save(function(err, res) {
-      if (err) {
-        res.status(500).send("500");
-      }
-    });
-    return res.status(200).send("200");
-  } catch {
-    err => {
-      console.log(err);
-      return res.status(500).send("500");
-    };
-  }
-});
-router.get("/rest/:id", async (req, res) => {
-  id = req.params.id;
-  const restuarant = await Owner.findById(id);
-  const orders = restuarant.orders;
-  if (orders) {
-    res.status(200).send(JSON.stringify(orders));
-  } else res.status(500).send("500");
-});
-
-router.post("/rest/changeStatus", async (req, res) => {
-  data = req.body;
-  let restuarant = await Owner.findById(data.rest_id);
-  let upcomingorders = restuarant.orders.upcomingOrders;
-  console.log(upcomingorders);
-  let pastorders = restuarant.orders.pastOrders;
-  let order = await upcomingorders.id(data.orderId);
-  console.log(order.buyerId);
-  let buyer = await Buyer.findById(order.buyerId);
-  let buyerPastorders = buyer.orders.pastOrders;
-  let buyerupcomingorders = buyer.orders.upcomingOrders;
-  let buyerOrder = await buyerupcomingorders.id(data.orderId);
-  console.log(buyerOrder);
-  order.orderStatus = data.orderStatus;
-  buyerOrder.orderStatus = data.orderStatus;
-  if (data.orderStatus == "Cancelled" || data.orderStatus == "Delivered") {
-    await pastorders.push(order);
-    await order.remove();
-    await buyerPastorders.push(order);
-    await buyerOrder.remove();
-    await restuarant.save(function(err, updatedObj) {
-      if (err) {
-        return res.status(500).send("500");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.data);
       } else {
-        buyer.save(function(err, check) {
-          if (!err) {
-            return res.status(200).send(JSON.stringify(updatedObj.orders));
-          } else {
-            return res.status(500).send("500");
-          }
-        });
+        console.log("Inside results");
+        return res.status(results.status).send(results.message);
       }
-    });
-  } else {
-    await restuarant.save(function(err, updatedObj) {
+    }
+  );
+});
+
+router.post("/placeOrder", function(req, res) {
+  console.log("in backend: place buyer orders");
+  kafka.make_request(
+    "order_topic",
+    { path: "placeOrder", content: req.body },
+    function(err, results) {
+      console.log("in kafka call back on back-end");
+      console.log(results);
       if (err) {
-        return res.status(500).send("500");
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.data);
       } else {
-        console.log(updatedObj.orders);
-        buyer.save(function(err, check) {
-          if (check) {
-            return res.status(200).send(JSON.stringify(updatedObj.orders));
-          } else {
-            return res.status(500).send("500");
-          }
-        });
+        console.log("Inside results");
+        return res.status(results.status).send(results.message);
       }
-    });
-  }
+    }
+  );
+});
+
+router.get("/rest/:id", function(req, res) {
+  id = req.params.id;
+  kafka.make_request(
+    "order_topic",
+    { path: "getOwnerOrders", content: id },
+    function(err, results) {
+      console.log("in kafka rest owner call back on back-end");
+      console.log(results);
+      if (err) {
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.data);
+      } else {
+        console.log("Inside results");
+        return res.status(results.status).send(results.message);
+      }
+    }
+  );
+});
+
+router.post("/rest/changeStatus", function(req, res) {
+  kafka.make_request(
+    "order_topic",
+    { path: "changeOrderStatus", content: req.body },
+    function(err, results) {
+      console.log("in kafka change status call back on back-end");
+      console.log(results);
+      if (err) {
+        console.log("Inside err");
+        console.log(err);
+        return res.status(err.status).send(err.data);
+      } else {
+        console.log("Inside results");
+        return res.status(results.status).send(results.message);
+      }
+    }
+  );
 });
 module.exports = router;

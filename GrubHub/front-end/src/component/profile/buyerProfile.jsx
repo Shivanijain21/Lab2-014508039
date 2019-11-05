@@ -8,7 +8,8 @@ class BuyerProfile extends Component {
   state = {
     buyer: {
       email: "",
-      name: "",
+      firstName: "",
+      lastName: "",
       phone_num: "",
       address: ""
     }
@@ -28,7 +29,8 @@ class BuyerProfile extends Component {
     console.log(buyer.address);
     let data = {
       address: buyer.address,
-      name: buyer.name,
+      firstName: buyer.firstName,
+      lastName: buyer.lastName,
       phone_num: buyer.phone_num
     };
     this.props.updateProfile(data);
@@ -56,15 +58,28 @@ class BuyerProfile extends Component {
               />
             </div>
             <div className="form-group col-sm-6">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">First Name</label>
               <input
                 type="text"
                 className="form-control"
-                name="name"
+                name="firstName"
                 id="name"
                 required
                 onChange={this.handleChange}
-                value={buyer.name}
+                value={buyer.firstName}
+                required
+              />
+            </div>
+            <div className="form-group col-sm-6">
+              <label htmlFor="name">Last Name</label>
+              <input
+                type="text"
+                className="form-control"
+                name="lastName"
+                id="name"
+                required
+                onChange={this.handleChange}
+                value={buyer.lastName}
                 required
               />
             </div>

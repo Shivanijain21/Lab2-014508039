@@ -59,63 +59,13 @@ class Menu extends Component {
     const imageStyle = {
       height: "100px"
     };
-    // for (let menuItem in this.state.items) {
-    //   let itemDesc = [];
-
-    //   this.state.items[menuItem].forEach(e => {
-    //     let quantity = <p>0</p>;
-    //     console.log(this.state.cart);
-    //     if (this.state.cart.hasOwnProperty(e.item_id)) {
-    //       quantity = <p>{this.state.cart[e.item_id]["quantity"]}</p>;
-    //     }
-    //     let imageUrl = `${util.base_url}/profileImage/item${this.state.rest_id}`;
-    //     itemDesc.push(
-    //       <Card.Body className="row">
-    //         <div className="col-sm-2">
-    //           <img src={imageUrl} style={imageStyle} />
-    //         </div>
-    //         <div className="col-sm-10">
-    //           <h5>{e.item_name}</h5>
-    //           <p>{e.description}</p>
-    //           <p>${e.price}</p>
-    //           <div className="row">
-    //             <button
-    //               className="btn btn-danger mx-2"
-    //               onClick={() => this.deductItem(e)}
-    //             >
-    //               -
-    //             </button>
-    //             {quantity}
-    //             <button
-    //               className="btn btn-danger mx-2"
-    //               onClick={() => this.addItem(e)}
-    //             >
-    //               +
-    //             </button>
-    //           </div>
-    //         </div>
-    //       </Card.Body>
-    //     );
-    //   });
-
-    //   itemList.push(
-    //     <Accordion defaultActiveKey={menuItem}>
-    //       <Card>
-    //         <Accordion.Toggle as={Card.Header} eventKey={menuItem}>
-    //           {menuItem}
-    //         </Accordion.Toggle>
-    //         <Accordion.Collapse eventKey={menuItem}>
-    //           <div>{itemDesc}</div>
-    //         </Accordion.Collapse>
-    //       </Card>
-    //     </Accordion>
-    //   );
-    // }
+    console.log("--------sections--------");
+    console.log(this.state.sections);
     ItemList = this.state.sections.map(section => (
       <Accordion defaultActiveKey={section.sectionName}>
         <Card>
-          <Accordion.Toggle as={Card.Header} eventKey={section.sectionNam}>
-            {section.sectionNam}
+          <Accordion.Toggle as={Card.Header} eventKey={section.sectionName}>
+            {section.sectionName}
           </Accordion.Toggle>
           <Accordion.Collapse eventKey={section.sectionName}>
             <div>

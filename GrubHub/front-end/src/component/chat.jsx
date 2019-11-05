@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 import util from "../utils";
-import cookie from "react-cookies";
 
 class Chat extends Component {
   state = {
@@ -20,7 +19,7 @@ class Chat extends Component {
     let data = {
       id: this.state.eachOrder.id,
       orderId: this.state.eachOrder.orderId,
-      sender: cookie.load("Owner") ? "Owner" : "Buyer"
+      sender: localStorage.getItem("userProfile") == "owner" ? "Owner" : "Buyer"
     };
     console.log(data);
     Axios.post(`${util.base_url}/message/`, data).then(response => {
@@ -37,7 +36,7 @@ class Chat extends Component {
       id: this.state.eachOrder.id,
       orderId: this.state.eachOrder.orderId,
       messageContent: this.state.messageContent,
-      sender: cookie.load("Owner") ? "Owner" : "Buyer"
+      sender: localStorage.getItem("userProfile") == "owner" ? "Owner" : "Buyer"
     };
     Axios.post(`${util.base_url}/message/sendMessage`, data)
       .then(response => {

@@ -6,7 +6,6 @@ import Menu from "./menu";
 import Axios from "axios";
 import CustomNavbar from "./navbar";
 import { Redirect } from "react-router";
-import cookie from "react-cookies";
 import util from "../utils";
 
 class Restuarant extends Component {
@@ -42,7 +41,7 @@ class Restuarant extends Component {
       height: "300px",
       backgroundColor: "grey"
     };
-    if (!cookie.load("Buyer")) {
+    if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     }
     const imageUrl = `${util.base_url}/profileImage/Rest${this.state.restuarant._id}`;

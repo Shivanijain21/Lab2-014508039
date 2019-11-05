@@ -1,5 +1,4 @@
 import React from "react";
-import cookie from "react-cookies";
 import { Redirect } from "react-router";
 import Navbar from "../navbar";
 import BuyerProfile from "./buyerProfile";
@@ -10,8 +9,9 @@ import { Container, Row } from "react-bootstrap";
 const Profile = () => {
   let profileComponent = null;
   let redirectVar = null;
-  if (cookie.load("Buyer") || cookie.load("Owner")) {
-    if (cookie.load("Buyer")) profileComponent = <BuyerProfile />;
+  if (localStorage.getItem("id")) {
+    if (localStorage.getItem("userProfile") == "buyer")
+      profileComponent = <BuyerProfile />;
     else profileComponent = <OwnerProfile />;
   } else {
     redirectVar = <Redirect to="/login" />;

@@ -140,7 +140,7 @@ class OwnerMenu extends Component {
       sectionCard,
       redirectVar,
       redirectToItemlist = null;
-    if (!cookie.load("Owner")) {
+    if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     }
     if (this.state.url) {

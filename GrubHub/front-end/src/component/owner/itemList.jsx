@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import cookie from "react-cookies";
 import Axios from "axios";
 import Navbar from "../navbar";
 import { Button, Modal } from "react-bootstrap";
@@ -180,7 +179,7 @@ class ItemList extends Component {
       redirectVar = null;
     console.log("Items");
     console.log(this.state.Items);
-    if (!cookie.load("Owner")) {
+    if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     }
     if (this.state.errorFlag === 500) {

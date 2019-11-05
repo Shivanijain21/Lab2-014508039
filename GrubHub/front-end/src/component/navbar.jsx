@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import logo from "../Images/grubhub-icon.png";
 import { Link } from "react-router-dom";
-import cookie from "react-cookies";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { connect } from "react-redux";
 import { logout } from "../actions/loginAction";
@@ -11,13 +10,8 @@ import PropTypes from "prop-types";
 class CustomNav extends Component {
   //handle logout to destroy the cookie
   handleLogout = () => {
-    localStorage.name = "";
     sessionStorage.clear();
-    if (cookie.load("Buyer")) {
-      cookie.remove("Buyer", { path: "/" });
-    } else if (cookie.load("Owner")) {
-      cookie.remove("Owner", { path: "/" });
-    }
+    localStorage.clear();
     this.props.logout();
   };
 
@@ -26,9 +20,9 @@ class CustomNav extends Component {
     let customLink = null;
     let user = `Hi`;
     //commonNav loop
-    if (cookie.load("Owner") || cookie.load("Buyer")) {
+    if (localStorage.getItem("id")) {
       console.log("Able to read cookie");
-      if (cookie.load("Buyer")) {
+      if (localStorage.getItem("userProfile") == "buyer") {
         homelink = "/home";
         customLink = (
           <Link to="/cart" className="linkinNav nav-link">

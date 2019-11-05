@@ -19,6 +19,7 @@ var jwt = require("jsonwebtoken");
 var JwtStrategy = require("passport-jwt").Strategy;
 var ExtractJwt = require("passport-jwt").ExtractJwt;
 const message = require("./routes/message");
+const { db } = require("./utility");
 
 var jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
