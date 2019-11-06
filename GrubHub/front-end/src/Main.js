@@ -22,13 +22,13 @@ class Main extends Component {
           <Route path="/" exact component={Landing} />
           <Route path="/profile" component={Profile} />
           <Route path="/home" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUp} />
           <Route path="/restuarant/:id" component={Restuarant} />
           <Route path="/searchResult/:searchString" component={SearchResult} />
           <Route path="/restuarantMenu" component={Menu} />
           <Route path="/itemList/:section" component={ItemList} />
           <Route path="/cart" component={Cart} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={SignUp} />
         </div>
       </Provider>
     );

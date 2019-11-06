@@ -11,8 +11,30 @@ function handle_request(msg, callback) {
       updateProfile(msg.content, callback);
       break;
     }
+    case "authenticate": {
+      authenticate(msg.content, callback);
+      break;
+    }
   }
 }
+let authenticate = (content, callback) => {
+  Owner.findOne({ email: content }, function(err, user) {
+    if (err) {
+      console.log("----in auntenticate err-----");
+      callback(err, false);
+      return;
+    } else {
+      if (user) {
+        console.log("----in owner auntenticate user -----");
+        callback(null, true);
+        return;
+      } else {
+        callback(err, false);
+        return;
+      }
+    }
+  });
+};
 let getProfile = (content, callback) => {
   console.log("in owner profile");
   Owner.findById(content, function(err, user) {

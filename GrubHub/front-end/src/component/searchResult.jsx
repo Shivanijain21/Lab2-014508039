@@ -4,11 +4,15 @@ import RestuarantCards from "./RestuarantCards";
 import { Redirect } from "react-router";
 import Navbar from "./navbar";
 import util from "../utils";
+import Pagination from "./pagination";
+import { paginate } from "./paginate/paginate";
 
 class SearchResult extends Component {
   state = {
     dataSet: [],
-    totalDataSet: []
+    totalDataSet: [],
+    currentPage: 1,
+    pageSize: 2
   };
   componentWillMount() {
     if (this.props.match.params.searchString === "null") {
@@ -42,6 +46,10 @@ class SearchResult extends Component {
     } else dataSet = this.state.totalDataSet;
     this.setState({ dataSet: dataSet });
   };
+  handlePageChange = page => {
+    console.log(page);
+    this.setState({ currentPage: page });
+  };
   render() {
     let redirectVar = null;
     if (!localStorage.getItem("id")) {
@@ -55,9 +63,14 @@ class SearchResult extends Component {
         </div>
       );
     } else {
+      const restuarants = paginate(
+        this.state.dataSet,
+        this.state.currentPage,
+        this.state.pageSize
+      );
       restuarantList = (
         <div class="card-deck col-sm-9">
-          {this.state.dataSet.map(data => (
+          {restuarants.map(data => (
             <div class="col-sm-12">
               <RestuarantCards key={data._id} restuarant={data} />
             </div>
@@ -69,7 +82,7 @@ class SearchResult extends Component {
       <div class="container-fluid">
         {redirectVar}
         <Navbar />
-        <div class="row mt-5">
+        <div class="row mt-5 mx-2">
           <div className="col-sm-3">
             <h2>Filter using cuisine</h2>
             <label>
@@ -80,10 +93,17 @@ class SearchResult extends Component {
                 <option value="American">American</option>
                 <option value="mexican">mexican</option>
                 <option value="Japanese">Japanese</option>
+                <option value="Italian">Japanese</option>
               </select>
             </label>
           </div>
           {restuarantList}
+          <Pagination
+            count={this.state.dataSet.length}
+            pageSize={this.state.pageSize}
+            currentPage={this.state.currentPage}
+            onPageChange={this.handlePageChange}
+          />
         </div>
       </div>
     );

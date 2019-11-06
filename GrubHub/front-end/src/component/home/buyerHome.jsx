@@ -3,7 +3,6 @@ import { Form, Card } from "react-bootstrap";
 import image from "../../Images/pizza.jpg";
 import { Link } from "react-router-dom";
 import Axios from "axios";
-import cookie from "react-cookies";
 import util from "../../utils";
 import Chat from "../chat";
 
@@ -18,10 +17,8 @@ class BuyerHome extends Component {
   };
   componentWillMount() {
     let _id = localStorage.getItem("id");
-    let token = localStorage.getItem("jwt");
-    Axios.get(`${util.base_url}/order/${_id}`, {
-      headers: { Authorization: token }
-    }).then(response => {
+    // let token = localStorage.getItem("jwt");
+    Axios.get(`${util.base_url}/order/${_id}`).then(response => {
       // console.log(response.data);
       let Orders = response.data;
       // console.log(Orders);

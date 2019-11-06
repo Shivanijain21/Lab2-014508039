@@ -5,6 +5,7 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { connect } from "react-redux";
 import { logout } from "../actions/loginAction";
 import PropTypes from "prop-types";
+import setAuthToken from "../setAuthToken";
 
 //create the Navbar Component
 class CustomNav extends Component {
@@ -12,6 +13,7 @@ class CustomNav extends Component {
   handleLogout = () => {
     sessionStorage.clear();
     localStorage.clear();
+    setAuthToken();
     this.props.logout();
   };
 

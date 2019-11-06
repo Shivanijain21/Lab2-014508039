@@ -17,7 +17,8 @@ async function handle_request(msg, callback) {
       const match = await bcrypt.compare(data.password, getDetails.password);
       console.log(match);
       if (match) {
-        console.log(getDetails._id);
+        delete data.password;
+        console.log(data);
         var token = jwt.sign(data, process.env.TOKEN, {
           expiresIn: 10080 // in seconds
         });
@@ -51,6 +52,8 @@ async function handle_request(msg, callback) {
     if (getDetails) {
       const match = await bcrypt.compare(data.password, getDetails.password);
       if (match) {
+        console.log(data);
+        delete data.password;
         var token = jwt.sign(data, process.env.TOKEN, {
           expiresIn: 10080 // in seconds
         });

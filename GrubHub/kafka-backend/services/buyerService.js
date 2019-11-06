@@ -12,8 +12,32 @@ function handle_request(msg, callback) {
       updateProfile(msg.content, callback);
       break;
     }
+    case "authenticate": {
+      authenticate(msg.content, callback);
+      break;
+    }
   }
 }
+let authenticate = (content, callback) => {
+  console.log("---- in kafka backend to authenticate-------");
+  Buyer.findOne({ email: content }, function(err, user) {
+    if (err) {
+      console.log("----in err-----");
+      callback(err, false);
+      return;
+    } else {
+      if (user) {
+        console.log("----in user -----");
+        callback(null, true);
+        return;
+      } else {
+        callback(err, false);
+        return;
+      }
+    }
+  });
+};
+
 let getProfile = (content, callback) => {
   console.log("in buyer profile");
   Buyer.findById(content, function(err, user) {
@@ -86,4 +110,5 @@ let updateProfile = (content, callback) => {
       return;
     });
 };
+
 exports.handle_request = handle_request;

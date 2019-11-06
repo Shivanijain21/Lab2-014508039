@@ -167,6 +167,7 @@ class OwnerProfile extends Component {
               <option value="American">American</option>
               <option value="mexican">mexican</option>
               <option value="Japanese">Japanese</option>
+              <option value="Japanese">Italian</option>
             </select>
           </div>
           <div className="form-group">
