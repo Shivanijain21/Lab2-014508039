@@ -3,7 +3,7 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Link, animateScroll as scroll } from "react-scroll";
 import { Link as Alink } from "react-router-dom";
 import Menu from "./menu";
-import Axios from "axios";
+import axios from "axios";
 import CustomNavbar from "./navbar";
 import { Redirect } from "react-router";
 import util from "../utils";
@@ -22,7 +22,8 @@ class Restuarant extends Component {
   componentWillMount() {
     let _id = this.props.match.params.id;
     let restuarant = { ...this.state.restuarant };
-    Axios.get(`${util.base_url}/owner/profile/${_id}`)
+    axios
+      .get(`${util.base_url}/owner/profile/${_id}`)
       .then(response => {
         console.log("In profile");
         restuarant._id = _id;

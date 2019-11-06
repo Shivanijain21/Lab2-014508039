@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import axios from "axios";
 import RestuarantCards from "./RestuarantCards";
 import { Redirect } from "react-router";
 import Navbar from "./navbar";
@@ -16,16 +16,18 @@ class SearchResult extends Component {
   };
   componentWillMount() {
     if (this.props.match.params.searchString === "null") {
-      Axios.get(`${util.base_url}/search/`).then(response => {
+      axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+        "jwt"
+      );
+      axios.get(`${util.base_url}/search/`).then(response => {
         const data = response.data;
         console.log("In search result");
         console.log(data);
         this.setState({ dataSet: data, totalDataSet: data });
       });
     } else {
-      Axios.get(
-        `${util.base_url}/search/${this.props.match.params.searchString}`
-      )
+      axios
+        .get(`${util.base_url}/search/${this.props.match.params.searchString}`)
         .then(response => {
           const data = response.data;
           console.log("In search result");

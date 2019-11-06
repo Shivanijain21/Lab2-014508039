@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { Form, Card } from "react-bootstrap";
 import image from "../../Images/pizza.jpg";
 import { Link } from "react-router-dom";
-import Axios from "axios";
+import axios from "axios";
 import util from "../../utils";
 import Chat from "../chat";
+import Draggable from "react-draggable";
 
 class BuyerHome extends Component {
   state = {
@@ -18,7 +19,10 @@ class BuyerHome extends Component {
   componentWillMount() {
     let _id = localStorage.getItem("id");
     // let token = localStorage.getItem("jwt");
-    Axios.get(`${util.base_url}/order/${_id}`).then(response => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwt"
+    );
+    axios.get(`${util.base_url}/order/${_id}`).then(response => {
       // console.log(response.data);
       let Orders = response.data;
       // console.log(Orders);
@@ -86,34 +90,36 @@ class BuyerHome extends Component {
         <div className="row my-5">
           <h2 className="col-sm-12">Upcoming Orders</h2>
           {this.state.orders.upcomingOrders.map(order => (
-            <Card className="col-sm-4">
-              <div className="card-body">
-                <div>
-                  <h5>Restuarant Name</h5>
-                  <p>{order.restuarantName}</p>
+            <Draggable key={order._id}>
+              <Card className="col-sm-4">
+                <div className="card-body">
+                  <div>
+                    <h5>Restuarant Name</h5>
+                    <p>{order.restuarantName}</p>
+                  </div>
+                  <div>
+                    <h5>Order Details</h5>
+                    <p>{order.orderDescription}</p>
+                  </div>
+                  <div>
+                    <h5>Total Price</h5>
+                    <p>{order.totalPrice}</p>
+                  </div>
+                  <div>
+                    <h5>Order Status</h5>
+                    <p>{order.orderStatus}</p>
+                  </div>
+                  <div>
+                    <Chat
+                      order={Object.assign(
+                        {},
+                        { id: this.state.buyerId, orderId: order._id }
+                      )}
+                    ></Chat>
+                  </div>
                 </div>
-                <div>
-                  <h5>Order Details</h5>
-                  <p>{order.orderDescription}</p>
-                </div>
-                <div>
-                  <h5>Total Price</h5>
-                  <p>{order.totalPrice}</p>
-                </div>
-                <div>
-                  <h5>Order Status</h5>
-                  <p>{order.orderStatus}</p>
-                </div>
-                <div>
-                  <Chat
-                    order={Object.assign(
-                      {},
-                      { id: this.state.buyerId, orderId: order._id }
-                    )}
-                  ></Chat>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </Draggable>
           ))}
         </div>
       );

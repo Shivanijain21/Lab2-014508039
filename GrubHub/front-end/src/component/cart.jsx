@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "./navbar";
-import Axios from "axios";
+import axios from "axios";
 import { Redirect } from "react-router";
 import util from "../utils";
 
@@ -45,7 +45,8 @@ class Cart extends Component {
       buyerId: this.state.buyerId
     };
     console.log(data);
-    Axios.post(`${util.base_url}/order/placeOrder`, data)
+    axios
+      .post(`${util.base_url}/order/placeOrder`, data)
       .then(response => this.setState({ orderPlaced: 200 }))
       .catch(err => this.setState({ orderPlaced: 500 }));
   };

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import axios from "axios";
 import util from "../../utils";
 import Draggable from "react-draggable";
 import Chat from "../chat";
@@ -14,7 +14,10 @@ class OwnerHome extends Component {
   };
   componentWillMount() {
     let rest_id = localStorage.getItem("id");
-    Axios.get(`${util.base_url}/order/rest/${rest_id}`).then(response => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwt"
+    );
+    axios.get(`${util.base_url}/order/rest/${rest_id}`).then(response => {
       console.log(response.data);
       const orders = response.data;
       this.setState({ orders: orders, rest_id: rest_id });
@@ -38,12 +41,12 @@ class OwnerHome extends Component {
       orderStatus: eachOrder.orderStatus
     };
     console.log(data);
-    Axios.post(`${util.base_url}/order/rest/changeStatus`, data).then(
-      response => {
+    axios
+      .post(`${util.base_url}/order/rest/changeStatus`, data)
+      .then(response => {
         const orders = response.data;
         this.setState({ orders: orders });
-      }
-    );
+      });
   };
 
   render() {
@@ -53,7 +56,7 @@ class OwnerHome extends Component {
       completedOrders = null;
     if (this.state.orders.upcomingOrders.length != 0) {
       displayBlock = this.state.orders.upcomingOrders.map(eachOrder => (
-        <Draggable>
+        <Draggable key={eachOrder._id}>
           <div className="card col-sm-3">
             <div className="card-body m-1">
               <div>
@@ -112,32 +115,30 @@ class OwnerHome extends Component {
         <div className="row mt-5">
           <h2 className="col-sm-12">Completed Orders</h2>
           {this.state.orders.pastOrders.map(eachOrder => (
-            <Draggable>
-              <div className="card col-sm-3">
-                <div className="card-body">
-                  <div>
-                    <h5>Buyer Name</h5>
-                    <p>{eachOrder.name}</p>
-                  </div>
-                  <div>
-                    <h5>Order Details</h5>
-                    <p>{eachOrder.orderDescription}</p>
-                  </div>
-                  <div>
-                    <h5>Total Price</h5>
-                    <p>{eachOrder.totalPrice}</p>
-                  </div>
-                  <div>
-                    <h5>Delivery Address</h5>
-                    <p>{eachOrder.address}</p>
-                  </div>
-                  <div>
-                    <h5>Order Status</h5>
-                    <p>{eachOrder.orderStatus}</p>
-                  </div>
+            <div className="card col-sm-3" key={eachOrder._id}>
+              <div className="card-body">
+                <div>
+                  <h5>Buyer Name</h5>
+                  <p>{eachOrder.name}</p>
+                </div>
+                <div>
+                  <h5>Order Details</h5>
+                  <p>{eachOrder.orderDescription}</p>
+                </div>
+                <div>
+                  <h5>Total Price</h5>
+                  <p>{eachOrder.totalPrice}</p>
+                </div>
+                <div>
+                  <h5>Delivery Address</h5>
+                  <p>{eachOrder.address}</p>
+                </div>
+                <div>
+                  <h5>Order Status</h5>
+                  <p>{eachOrder.orderStatus}</p>
                 </div>
               </div>
-            </Draggable>
+            </div>
           ))}
         </div>
       );

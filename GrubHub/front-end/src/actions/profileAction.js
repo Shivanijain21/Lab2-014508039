@@ -10,6 +10,7 @@ export const fetchProfile = () => dispatch => {
   } else if (localStorage.getItem("userProfile") == "owner") {
     url = `${util.base_url}/owner/profile/${localStorage.getItem("id")}`;
   }
+  axios.defaults.headers.common["Authorization"] = localStorage.getItem("jwt");
   axios
     .get(url)
     .then(response => response.data)
@@ -32,6 +33,7 @@ export const updateProfile = postData => dispatch => {
   } else if (localStorage.getItem("userProfile") == "owner") {
     url = `${util.base_url}/owner/profileUpdate/${localStorage.getItem("id")}`;
   }
+  axios.defaults.headers.common["Authorization"] = localStorage.getItem("jwt");
   axios
     .post(url, postData)
     .then(response => response.data)

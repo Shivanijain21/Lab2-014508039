@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 import util from "../utils";
 
@@ -22,7 +22,10 @@ class Chat extends Component {
       sender: localStorage.getItem("userProfile") == "owner" ? "Owner" : "Buyer"
     };
     console.log(data);
-    Axios.post(`${util.base_url}/message/`, data).then(response => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwt"
+    );
+    axios.post(`${util.base_url}/message/`, data).then(response => {
       const messages = response.data;
       this.setState({
         messages: messages,
@@ -38,7 +41,8 @@ class Chat extends Component {
       messageContent: this.state.messageContent,
       sender: localStorage.getItem("userProfile") == "owner" ? "Owner" : "Buyer"
     };
-    Axios.post(`${util.base_url}/message/sendMessage`, data)
+    axios
+      .post(`${util.base_url}/message/sendMessage`, data)
       .then(response => {
         const messages = response.data;
         this.setState({
@@ -75,7 +79,7 @@ class Chat extends Component {
                 cusClassName = "col-sm-12 btn btn-danger";
               } else cusClassName = "col-sm-12 btn btn-secondary";
               return (
-                <div className="my-2">
+                <div key={message._id} className="my-2">
                   <p>
                     {message.sentBy}, {message.timestamp}
                   </p>
@@ -93,7 +97,7 @@ class Chat extends Component {
                 value={this.state.messageContent}
                 onChange={this.handleMessage}
               />
-              <button type="submit" class="btn btn-primary col-sm-2">
+              <button type="submit" className="btn btn-primary col-sm-2">
                 send
               </button>
             </form>

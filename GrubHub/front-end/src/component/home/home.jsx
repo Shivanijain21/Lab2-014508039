@@ -17,11 +17,11 @@ class Home extends Component {
     }
     console.log("in home");
     return (
-      <div>
+      <>
         <Navbar />
         {redirectVar}
         {homeComponent}
-      </div>
+      </>
     );
   }
 }

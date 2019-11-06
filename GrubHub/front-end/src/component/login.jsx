@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { fetchcred } from "../actions/loginAction";
 import PropTypes from "prop-types";
 import jwt_decode from "jwt-decode";
-import setAuthToken from "../setAuthToken";
 
 class Login extends Component {
   state = {
@@ -43,7 +42,6 @@ class Login extends Component {
     if (authFlag === 200) {
       localStorage.setItem("id", storedata.id);
       localStorage.setItem("jwt", storedata.token);
-      setAuthToken(storedata.token);
       let decodeJwt = jwt_decode(storedata.token);
       localStorage.setItem("userProfile", decodeJwt.userProfile);
       redirectVar = <Redirect to="/home" />;
@@ -61,7 +59,7 @@ class Login extends Component {
         <div className="container-fluid">
           <div className="row justify-content-sm-center">
             <div className="col-sm-4 mt-3 signIn">
-              <div class="col-sm-12 row">
+              <div className="col-sm-12 row">
                 <h4 className="my-3">Sign in with your Grubhub account</h4>
               </div>
               <form onSubmit={this.handleLogin}>

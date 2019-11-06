@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
+import axios from "axios";
 import Navbar from "../navbar";
 import { Button, Modal } from "react-bootstrap";
 import { Redirect } from "react-router";
@@ -34,7 +34,10 @@ class ItemList extends Component {
       sectionId: sectionId
     };
     let Items = [];
-    Axios.post(`${util.base_url}/menu`, data).then(response => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwt"
+    );
+    axios.post(`${util.base_url}/menu`, data).then(response => {
       Items = [...response.data];
       Items.forEach(item => {
         item.image = `${util.base_url}/profileImage/item${item.item_id}`;
@@ -62,7 +65,8 @@ class ItemList extends Component {
     };
     console.log(data);
     let Items = [];
-    Axios.post(`${util.base_url}/menu/addItem`, data)
+    axios
+      .post(`${util.base_url}/menu/addItem`, data)
       .then(response => {
         console.log("in insert item");
 
@@ -100,7 +104,8 @@ class ItemList extends Component {
     };
     console.log(data);
     let Items = [];
-    Axios.post(`${util.base_url}/menu/deleteItem`, data)
+    axios
+      .post(`${util.base_url}/menu/deleteItem`, data)
       .then(response => {
         console.log("in delete item");
         Items = [...response.data];
@@ -136,7 +141,8 @@ class ItemList extends Component {
     data.sectionId = this.state.sectionId;
     data.restId = this.state.restId;
     let Items = [];
-    Axios.post(`${util.base_url}/menu/editItem`, data)
+    axios
+      .post(`${util.base_url}/menu/editItem`, data)
       .then(response => {
         console.log("in insert item");
         console.log(response.data);
@@ -164,13 +170,11 @@ class ItemList extends Component {
     };
     let param;
     param = "item" + this.state.ItemUpdate.itemId;
-    Axios.post(
-      `${util.base_url}/profileImage/upload/${param}`,
-      formData,
-      config
-    ).then(response => {
-      alert("successfully uploaded");
-    });
+    axios
+      .post(`${util.base_url}/profileImage/upload/${param}`, formData, config)
+      .then(response => {
+        alert("successfully uploaded");
+      });
   };
   render() {
     let ItemList,

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import Axios from "axios";
-import cookie from "react-cookies";
+import axios from "axios";
 import { Redirect } from "react-router";
 import Navbar from "../navbar";
 import util from "../../utils";
@@ -24,7 +23,10 @@ class OwnerMenu extends Component {
   };
   componentWillMount() {
     let restId = localStorage.getItem("id");
-    Axios.get(`${util.base_url}/menu/section/${restId}`).then(response => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwt"
+    );
+    axios.get(`${util.base_url}/menu/section/${restId}`).then(response => {
       console.log(response.data);
       this.setState({ section: response.data, restId: restId });
     });
@@ -38,7 +40,8 @@ class OwnerMenu extends Component {
     };
     // console.log(data);
 
-    Axios.post(`${util.base_url}/menu/addSection`, data)
+    axios
+      .post(`${util.base_url}/menu/addSection`, data)
       .then(response => {
         console.log(response.data);
         let addsection = {
@@ -81,7 +84,8 @@ class OwnerMenu extends Component {
       restId: this.state.restId
     };
     console.log(data);
-    Axios.post(`${util.base_url}/menu/deleteSection`, data)
+    axios
+      .post(`${util.base_url}/menu/deleteSection`, data)
       .then(response => {
         this.setState({
           section: response.data,
@@ -124,7 +128,8 @@ class OwnerMenu extends Component {
       sectionId: this.state.updateSection.sectionId
     };
     console.log(data);
-    Axios.post(`${util.base_url}/menu/editSection`, data)
+    axios
+      .post(`${util.base_url}/menu/editSection`, data)
       .then(response => {
         this.setState({
           section: response.data,

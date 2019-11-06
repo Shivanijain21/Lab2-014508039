@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Accordion, Card } from "react-bootstrap";
-import Axios from "axios";
+import axios from "axios";
 import util from "../utils";
 
 class Menu extends Component {
@@ -17,7 +17,10 @@ class Menu extends Component {
     }
   }
   componentWillReceiveProps(props) {
-    Axios.get(`${util.base_url}/menu/${props.value}`).then(response => {
+    axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+      "jwt"
+    );
+    axios.get(`${util.base_url}/menu/${props.value}`).then(response => {
       let items = [];
       items = response.data;
       this.setState({ sections: items, restId: props.value });

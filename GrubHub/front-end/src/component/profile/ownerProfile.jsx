@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { updateProfile, fetchProfile } from "../../actions/profileAction";
 import PropTypes from "prop-types";
 import { Image } from "react-bootstrap";
-import Axios from "axios";
+import axios from "axios";
 import util from "../../utils";
 
 class OwnerProfile extends Component {
@@ -56,13 +56,11 @@ class OwnerProfile extends Component {
     };
     let param;
     param = "Rest" + localStorage.getItem("id");
-    Axios.post(
-      `${util.base_url}/profileImage/upload/${param}`,
-      formData,
-      config
-    ).then(response => {
-      window.location.reload();
-    });
+    axios
+      .post(`${util.base_url}/profileImage/upload/${param}`, formData, config)
+      .then(response => {
+        window.location.reload();
+      });
   };
   handleImageChange = e => {
     this.setState({
