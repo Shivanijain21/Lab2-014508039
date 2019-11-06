@@ -6,7 +6,6 @@ router.post("/", function(req, res) {
   console.log("in sign in backend");
   kafka.make_request("sign_in", req.body, function(err, results) {
     console.log("in kafka call back on back-end");
-    console.log(results);
     if (err) {
       console.log("Inside err");
       console.log(err);

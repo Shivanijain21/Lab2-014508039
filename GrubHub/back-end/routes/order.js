@@ -10,7 +10,6 @@ router.get("/:id", function(req, res) {
     { path: "getBuyerOrder", content: id },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -30,7 +29,6 @@ router.post("/placeOrder", function(req, res) {
     { path: "placeOrder", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -50,7 +48,6 @@ router.get("/rest/:id", function(req, res) {
     { path: "getOwnerOrders", content: id },
     function(err, results) {
       console.log("in kafka rest owner call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -69,7 +66,6 @@ router.post("/rest/changeStatus", function(req, res) {
     { path: "changeOrderStatus", content: req.body },
     function(err, results) {
       console.log("in kafka change status call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);

@@ -9,7 +9,6 @@ router.get("/", function(req, res) {
     { path: "allRestuarant", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -29,7 +28,6 @@ router.get("/:searchString", function(req, res) {
     { path: "searchSpecific", content: searchString },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);

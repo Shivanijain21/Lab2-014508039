@@ -9,7 +9,6 @@ router.post("/sendMessage", function(req, res) {
     { path: "sendMessage", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -29,7 +28,6 @@ router.post("/", function(req, res) {
     { path: "getMessages", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);

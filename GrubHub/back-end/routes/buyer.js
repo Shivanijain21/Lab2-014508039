@@ -10,7 +10,6 @@ router.get("/profile/:id", function(req, res) {
     { path: "getProfile", content: req.params.id },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -35,7 +34,6 @@ router.post("/profileUpdate/:id", function(req, res) {
     { path: "updateProfile", content: content },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);

@@ -12,13 +12,14 @@ const BuyerService = require("./services/buyerService");
 const OwnerService = require("./services/ownerService");
 const mongoose = require("mongoose");
 const config = require("./config");
+const db = require("./utility");
 
-mongoose.Promise = global.Promise;
-console.log(config.mongoURI);
-mongoose
-  .connect(config.mongoURI, { useNewUrlParser: true })
-  .then(console.log("connected to mongodb &&&&&&&&&&&&&&&"))
-  .catch(err => console.log("error in mongo connect &&&&&&&&&&&&&&&" + err));
+// mongoose.Promise = global.Promise;
+// console.log(config.mongoURI);
+// mongoose
+//   .connect(config.mongoURI, { useNewUrlParser: true })
+//   .then(console.log("connected to mongodb &&&&&&&&&&&&&&&"))
+//   .catch(err => console.log("error in mongo connect &&&&&&&&&&&&&&&" + err));
 
 function handleTopicRequest(topic_name, fname) {
   console.log("topic name" + topic_name);

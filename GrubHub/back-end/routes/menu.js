@@ -10,7 +10,6 @@ router.post("/", function(req, res) {
     { path: "getOwnerItem", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -31,7 +30,6 @@ router.get("/section/:id", function(req, res) {
     { path: "getOwnerSections", content: req.params.id },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -52,7 +50,6 @@ router.get("/:id", function(req, res) {
     { path: "getBuyerItem", content: req.params.id },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -72,7 +69,6 @@ router.post("/addSection", function(req, res) {
     { path: "doAddSection", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -92,7 +88,6 @@ router.post("/deleteSection", function(req, res) {
     { path: "doDeleteSection", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -112,7 +107,6 @@ router.post("/editSection", function(req, res) {
     { path: "doEditSection", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -132,7 +126,6 @@ router.post("/addItem", function(req, res) {
     { path: "doAddItem", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -152,7 +145,6 @@ router.post("/editItem", function(req, res) {
     { path: "doEditItem", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
@@ -172,7 +164,6 @@ router.post("/deleteItem", function(req, res) {
     { path: "doDeleteItem", content: req.body },
     function(err, results) {
       console.log("in kafka call back on back-end");
-      console.log(results);
       if (err) {
         console.log("Inside err");
         console.log(err);
